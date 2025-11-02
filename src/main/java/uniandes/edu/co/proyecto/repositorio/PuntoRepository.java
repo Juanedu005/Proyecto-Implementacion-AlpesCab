@@ -12,7 +12,7 @@ import uniandes.edu.co.proyecto.modelo.Punto;
 
 
 
-public interface PuntoRepostory extends JpaRepository<Punto,Integer> {
+public interface PuntoRepository extends JpaRepository<Punto,Integer> {
 
     @Query(value= "SELECT * FROM Punto", nativeQuery = true)
     Collection<Punto> darPuntos(); 
