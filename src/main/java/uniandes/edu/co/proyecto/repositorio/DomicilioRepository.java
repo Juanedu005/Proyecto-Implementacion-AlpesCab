@@ -14,7 +14,7 @@ import uniandes.edu.co.proyecto.modelo.Domicilio;
 public interface DomicilioRepository extends JpaRepository<Domicilio, Integer> {
 
     @Query(value="SELECT * FROM Domicilio", nativeQuery = true)
-    Collection<Domicilio> darDomicilio();
+    Collection<Domicilio> darDomicilios();
 
     @Query(value="SELECT * FROM Domicilio WHERE Servicio_id= :Servicio_id", nativeQuery = true)
     Domicilio darDomicilio(@Param("Servicio_id") int Servicio_id);

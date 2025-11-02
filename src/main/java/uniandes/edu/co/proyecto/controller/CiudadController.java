@@ -36,7 +36,7 @@ public class CiudadController {
     }
 
     @PostMapping("/ciudades/{id}/edit")
-    public String BarEditarForm(@PathVariable("id") int id, Model model){
+    public String ciudadEditarForm(@PathVariable("id") int id, Model model){
         Ciudad ciudad = ciudadRepository.darCiudad(id);
         
         if (ciudad != null) {
@@ -60,6 +60,6 @@ public class CiudadController {
         return "redirect:/ciudades";
     }
 
-
+    
 
 }

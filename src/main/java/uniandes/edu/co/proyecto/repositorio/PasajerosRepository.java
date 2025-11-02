@@ -8,13 +8,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import uniandes.edu.co.proyecto.modelo.Pasajeros;
+
 public interface PasajerosRepository extends JpaRepository<PasajerosRepository, Integer> {
 
     @Query(value= "SELECT * FROM Pasajeros", nativeQuery = true)
     Collection<PasajerosRepository> darPasajeros();
 
     @Query(value="SELECT * FROM Pasajeros WHERE Servicio_id= : Servicio_id", nativeQuery = true)
-    PasajerosRepository darPasajero(@Param("Servicio_id") int Servicio_id);
+    Pasajeros darPasajero(@Param("Servicio_id") int Servicio_id);
 
     @Modifying
     @Transactional

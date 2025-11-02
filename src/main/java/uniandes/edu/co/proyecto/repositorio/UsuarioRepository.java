@@ -22,12 +22,12 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     @Modifying
     @Transactional
     @Query(value = "INSERT INTO Usuario (id, nombre, email, cedula) VALUES(alpescab_sequence.nextval, :nombre, :email, :cedula)", nativeQuery= true)
-    void insertarUsuario(@Param("nombre") String nombre, @Param("email") String email, @Param("cedula") String cedula);
+    void insertarUsuario(@Param("nombre") String nombre, @Param("email") String email, @Param("cedula") Integer cedula);
 
     @Modifying
     @Transactional
     @Query(value= "UPDATE Usuario SET nombre=: nombre, email=: email, cedula=: cedula WHERE id =:id", nativeQuery = true)
-    void actualizarUsuario(@Param("id") int id, @Param("nombre") String nombre, @Param("email") String email, @Param("cedula") String cedula);
+    void actualizarUsuario(@Param("id") int id, @Param("nombre") String nombre, @Param("email") String email, @Param("cedula") Integer cedula);
     
     @Modifying
     @Transactional

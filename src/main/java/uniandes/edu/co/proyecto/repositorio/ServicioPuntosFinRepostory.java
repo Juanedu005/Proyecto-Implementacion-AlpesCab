@@ -8,13 +8,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
-public interface ServiciosPuntosFinRepostory extends JpaRepository<ServiciosPuntosFin, ServiciosPuntosFinPK> {
+import uniandes.edu.co.proyecto.modelo.ServicioPuntosFin;
+import uniandes.edu.co.proyecto.modelo.ServicioPuntosFinPK;
+
+public interface ServicioPuntosFinRepostory extends JpaRepository<ServicioPuntosFin, ServicioPuntosFinPK> {
     
     @Query(value= "SELECT * FROM ServiciosPuntosFin", nativeQuery = true)
-    Collection<ServiciosPuntosFin> darServiciosPuntosFins();
+    Collection<ServicioPuntosFin> darServiciosPuntosFins();
     
     @Query(value="SELECT * FROM ServiciosPuntosFin WHERE Servicios_id= :Servicios_id AND P_Punto_id= :P_Punto_id", nativeQuery = true)
-    ServiciosPuntosFin darServiciosPuntosFin(@Param("Servicios_id") int Servicios_id, @Param("P_Punto_id") int P_Punto_id);
+    ServicioPuntosFin darServiciosPuntosFin(@Param("Servicios_id") int Servicios_id, @Param("P_Punto_id") int P_Punto_id);
 
     @Modifying
     @Transactional

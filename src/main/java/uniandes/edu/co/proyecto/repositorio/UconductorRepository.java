@@ -15,7 +15,7 @@ import uniandes.edu.co.proyecto.modelo.UconductorPk;
 public interface UconductorRepository extends JpaRepository<Uconductor, UconductorPk> {
 
     @Query(value= "SELECT * FROM Uconductor", nativeQuery = true)
-    Collection<Uconductor> daUconductors();
+    Collection<Uconductor> darUconductors();
     
     @Query(value="SELECT * FROM Uconductor WHERE id_conductor= :id_conductor AND id_usuario= :id_usuario", nativeQuery = true)
     Uconductor darUconductor(@Param("id_conductor") int id_conductor, @Param("id_usuario") int id_usuario);
