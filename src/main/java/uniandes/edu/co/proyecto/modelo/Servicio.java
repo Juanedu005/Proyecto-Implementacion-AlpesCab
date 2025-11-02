@@ -20,7 +20,7 @@ public class Servicio {
     private Integer id; 
 
     private Integer tarifa_fija; 
-    private String distancia_recorrida; 
+    private Integer distancia_recorrida; 
     private LocalDateTime hora_incio;
     private LocalDateTime hora_fin; 
 
@@ -38,7 +38,7 @@ public class Servicio {
 
     public Servicio(){;}
 
-    public Servicio(Integer id, Integer tarifa_fija, String distancia_recorrida, LocalDateTime hora_incio,
+    public Servicio(Integer id, Integer tarifa_fija, Integer distancia_recorrida, LocalDateTime hora_incio,
             LocalDateTime hora_fin, Punto p_Punto_id, Uservicios user_idser, Uservicios user_idusuario) {
         this.id = id;
         this.tarifa_fija = tarifa_fija;
@@ -66,11 +66,11 @@ public class Servicio {
         this.tarifa_fija = tarifa_fija;
     }
 
-    public String getDistancia_recorrida() {
+    public Integer getDistancia_recorrida() {
         return distancia_recorrida;
     }
 
-    public void setDistancia_recorrida(String distancia_recorrida) {
+    public void setDistancia_recorrida(Integer distancia_recorrida) {
         this.distancia_recorrida = distancia_recorrida;
     }
 
