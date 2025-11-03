@@ -23,7 +23,7 @@ public interface PuntoRepository extends JpaRepository<Punto,Integer> {
     
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO Punto (Punto_id, direccion, latitud, longitud, Servicio_id, Ciudad_id) VALUES(alpescab_sequence.nextval, :direccion, :latitud, :longitud, :Servicio_id, :Ciudad_id)", nativeQuery= true)
+    @Query(value = "INSERT INTO Punto (Punto_id, direccion, latitud, longitud, Servicio_id, Ciudad_id) VALUES(Punto_Punto_id_SEQ.nextval, :direccion, :latitud, :longitud, :Servicio_id, :Ciudad_id)", nativeQuery= true)
     void insertarPunto(@Param("direccion") String direccion, @Param("latitud") String latitud, @Param("longitud") String longitud, @Param("Servicio_id") Integer Servicio_id, @Param("Ciudad_id") Integer Ciudad_id);
 
     @Modifying

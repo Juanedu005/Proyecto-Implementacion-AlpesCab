@@ -21,7 +21,7 @@ public interface CiudadRepository extends JpaRepository<Ciudad, Integer> {
 
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO Ciudad (id, nombre) VALUES(alpescab_sequence.nextval, :nombre)", nativeQuery= true)
+    @Query(value = "INSERT INTO Ciudad (id, nombre) VALUES(Ciudad_id_SEQ.nextval, :nombre)", nativeQuery= true)
     void insertarCiudad(@Param("nombre") String nombre);
 
     @Modifying

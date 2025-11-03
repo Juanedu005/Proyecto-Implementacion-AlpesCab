@@ -21,7 +21,7 @@ public interface MercanciaRepository extends JpaRepository<Mercancia, Integer> {
     
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO Mercancia (Servicio_id, ElementoRecogido) VALUES (alpescab_sequence.nextval,:ElementoRecogido)", nativeQuery = true)
+    @Query(value = "INSERT INTO Mercancia (Servicio_id, ElementoRecogido) VALUES (Servicio_id_SEQ.nextval,:ElementoRecogido)", nativeQuery = true)
     void insertarMercancia(@Param("ElementoRecogido") String ElementoRecogido);
 
     @Modifying

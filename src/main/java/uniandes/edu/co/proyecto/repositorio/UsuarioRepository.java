@@ -21,7 +21,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO Usuario (id, nombre, email, cedula) VALUES(alpescab_sequence.nextval, :nombre, :email, :cedula)", nativeQuery= true)
+    @Query(value = "INSERT INTO Usuario (id, nombre, email, cedula) VALUES(Usuario_id_SEQ.nextval, :nombre, :email, :cedula)", nativeQuery= true)
     void insertarUsuario(@Param("nombre") String nombre, @Param("email") String email, @Param("cedula") Integer cedula);
 
     @Modifying

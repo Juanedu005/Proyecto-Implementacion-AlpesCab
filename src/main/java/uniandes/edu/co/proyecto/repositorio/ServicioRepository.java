@@ -21,7 +21,7 @@ public interface ServicioRepository extends JpaRepository<Servicio,Integer> {
 
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO Servicio (id, tarifa_fija, distancia_recorrida, hora_inicio, hora_fin, P_Punto_id, User_idser, User_idusuario) VALUES (alpescab_sequence.nextval, :tarifa_fija, :distancia_recorrida, :hora_inicio, :hora_fin, :P_Punto_id, :User_idser, :User_idusuario)", nativeQuery = true)
+    @Query(value = "INSERT INTO Servicio (id, tarifa_fija, distancia_recorrida, hora_inicio, hora_fin, P_Punto_id, User_idser, User_idusuario) VALUES (Servicio_id_SEQ.nextval, :tarifa_fija, :distancia_recorrida, :hora_inicio, :hora_fin, :P_Punto_id, :User_idser, :User_idusuario)", nativeQuery = true)
     void insertarServicio(@Param("tarifa_fija") Integer tarifa_fija, @Param("distancia_recorrida") Integer distancia_recorrida, @Param("hora_inicio") LocalDateTime hora_inicio, @Param("hora_fin") LocalDateTime hora_fin, @Param("P_Punto_id") Integer P_Punto_id, @Param("User_idser") Integer User_idser, @Param("User_idusuario") Integer User_idusuario);
 
     @Modifying

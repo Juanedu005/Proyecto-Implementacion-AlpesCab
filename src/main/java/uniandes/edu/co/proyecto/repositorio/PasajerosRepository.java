@@ -20,7 +20,7 @@ public interface PasajerosRepository extends JpaRepository<PasajerosRepository, 
 
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO Pasajeros (Servicio_id, nivel) VALUES (alpescab_sequence.nextval,:nivel)", nativeQuery = true)
+    @Query(value = "INSERT INTO Pasajeros (Servicio_id, nivel) VALUES (Servicio_id_SEQ.nextval,:nivel)", nativeQuery = true)
     void insertarPasajero(@Param("nivel") String nivel);
 
     @Modifying

@@ -22,7 +22,7 @@ public interface UconductorRepository extends JpaRepository<Uconductor, Uconduct
         
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO Uconductor (id_conductor, id_usuario) VALUES ( :id_conductor, :id_usuario)", nativeQuery = true)
+    @Query(value = "INSERT INTO Uconductor (id_conductor, id_usuario) VALUES (Uconductor_id_conductor_SEQ.nextval,Usuario_id_SEQ.nextval)", nativeQuery = true)
     void insertarUconductor(@Param("id_conductor") Integer id_conductor, @Param("id_usuario") Integer id_usuario);
 
     @Modifying

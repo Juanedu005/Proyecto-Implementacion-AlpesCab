@@ -20,7 +20,7 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
 
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO Vehiculo (id, tipo, marca, modelo, color, placa, capacidad, Ciudad_id, Ucond_idcond, Ucond_idusuario) VALUES (alpescab_sequence.nextval, :tipo, :marca, :modelo, :color, :placa, :capacidad, :Ciudad_id, Ucond_idcond, Ucond_idusuario)", nativeQuery= true)
+    @Query(value = "INSERT INTO Vehiculo (id, tipo, marca, modelo, color, placa, capacidad, Ciudad_id, Ucond_idcond, Ucond_idusuario) VALUES (Vehiculo_id_SEQ.nextval, :tipo, :marca, :modelo, :color, :placa, :capacidad, :Ciudad_id, Ucond_idcond, Ucond_idusuario)", nativeQuery= true)
     void insertarVehiculo(@Param("tipo") String tipo, @Param("marca") String marca, @Param("modelo") String modelo, @Param("color") String color, @Param("placa") String placa, @Param("capacidad") int capacidad, @Param("Ciudad_id") int Ciudad_id, @Param("Ucond_idcond") int Ucond_idcond, @Param("Ucond_idusuario") int Ucond_idusuario);
 
     @Modifying

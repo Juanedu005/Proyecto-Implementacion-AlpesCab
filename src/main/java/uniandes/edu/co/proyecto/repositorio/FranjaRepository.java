@@ -21,7 +21,7 @@ public interface FranjaRepository extends JpaRepository<Franja, Integer> {
 
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO Franja (id_franja, hora_inicio, hora_fin, ocupado, Vehiculo_id, Ucond_idcond, Ucond_idusuario) VALUES (alpescab_sequence.nextval, :hora_inicio, :hora_fin, :ocupado, :Vehiculo_id, :Ucond_idcond, :Ucond_idusuario)", nativeQuery = true)
+    @Query(value = "INSERT INTO Franja (id_franja, hora_inicio, hora_fin, ocupado, Vehiculo_id, Ucond_idcond, Ucond_idusuario) VALUES (Franja_id_franja_SEQ.nextval, :hora_inicio, :hora_fin, :ocupado, :Vehiculo_id, :Ucond_idcond, :Ucond_idusuario)", nativeQuery = true)
     void insertarFranja(@Param("hora_inicio") LocalDateTime hora_inicio, @Param("hora_fin") LocalDateTime hora_fin, @Param("ocupado") Boolean ocupado, @Param("Vehiculo_id") int Vehiculo_id, @Param("Ucond_idcond") int Ucond_idcond, @Param("Ucond_idusuario") int Ucond_idusuario);
 
     @Modifying

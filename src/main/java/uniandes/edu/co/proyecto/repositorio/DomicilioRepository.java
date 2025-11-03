@@ -21,7 +21,7 @@ public interface DomicilioRepository extends JpaRepository<Domicilio, Integer> {
 
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO Domicilio (Servicio_id, nombre_restaurante, orden) VALUES (alpescab_sequence.nextval, :nombre_restaurante, :orden)", nativeQuery= true)
+    @Query(value = "INSERT INTO Domicilio (Servicio_id, nombre_restaurante, orden) VALUES (Servicio_id_SEQ.nextval, :nombre_restaurante, :orden)", nativeQuery= true)
     void insertarDomicilio(@Param("nombre_restaurante") String nombre_restaurante, @Param("orden") String orden);
     
     @Modifying
