@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import uniandes.edu.co.proyecto.modelo.Uconductor;
 import uniandes.edu.co.proyecto.repositorio.UconductorRepository;
@@ -60,4 +61,39 @@ public class UconductorController {
         uconductorRepository.eliminarUconductor(id_conductor, id_usuario);
         return "redirect:/uconductores";
     }
+
+    // ========================= RFC2 =========================
+    // Top 20 conductores con más servicios 
+    @GetMapping("/uconductores/top")
+    public String rfc2Top20Conductores(Model model) {
+
+    model.addAttribute("topConductores",
+        uconductorRepository.rfc2Top20Conductores());
+
+    return "uconductoresTop";
+    }
+
+    // ========================= RFC3 =========================
+    // Total de dinero por vehículo y tipo de servicio para un conductor específico
+    // La comisión se pasa por query param: ?comisionPct=0.20 (por ejemplo 20%)
+    @GetMapping("/uconductores/{id_conductor}/{id_usuario}/recaudo")
+    public String rfc3DineroPorVehiculoYTipo(
+            @PathVariable("id_conductor") int idConductor,
+            @PathVariable("id_usuario") int idUsuarioConductor,
+            @RequestParam(name = "comisionPct", defaultValue = "0.20") double comisionPct,
+            Model model) {
+
+        model.addAttribute("recaudoVehiculoTipo",
+            uconductorRepository.rfc3DineroPorVehiculoYTipo(
+                idConductor,
+                idUsuarioConductor,
+                comisionPct
+            )
+        );
+
+        return "uconductorRecaudo";
+    }
+
+
+
 }
