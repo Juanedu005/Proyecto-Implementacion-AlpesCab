@@ -1,6 +1,8 @@
 package uniandes.edu.co.proyecto.repositorio;
 
+import java.sql.Date;
 import java.util.Collection;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -13,24 +15,51 @@ import uniandes.edu.co.proyecto.modelo.UserviciosPK;
 
 public interface UserviciosRepository extends JpaRepository<Uservicios, UserviciosPK> {
 
-    @Query(value= "SELECT * FROM Uservicios", nativeQuery = true)
+    /* ===== SELECTS ===== */
+    @Query(value = "SELECT * FROM USERVICIOS", nativeQuery = true)
     Collection<Uservicios> darUservicios();
 
-    @Query(value="SELECT * FROM Uservicios WHERE id_servicios= :id_servicios AND id_usuario= :id_usuario", nativeQuery = true)
-    Uservicios darUservicio(@Param("id_servicios") int id_servicios, @Param("id_usuario") int id_usuario);
+    @Query(value = "SELECT * FROM USERVICIOS WHERE id_usuario = :id_usuario AND id_servicios = :id_servicios", nativeQuery = true)
+    Optional<Uservicios> darUservicio(@Param("id_usuario") int idUsuario,
+                                      @Param("id_servicios") int idServicios);
 
-    @Modifying
+    /* ===== INSERT ===== */
+    // Genera id_servicios con la secuencia; id_usuario viene de USUARIO (FK existente)
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Transactional
-    @Query(value = "INSERT INTO Uservicios (id_servicios, id_usuario, nombre_tc, numero_tc, fecha_vencimiento, cv) VALUES ( Uservicios_id_servicios_SEQ.nextval , Usuario_id_SEQ.nextval , :nombre_tc, :numero_tc, :fecha_vencimiento, :cv)", nativeQuery = true)
-    void insertarUservicio(@Param("id_servicios") Integer id_servicios, @Param("id_usuario") Integer id_usuario, @Param("nombre_tc") String nombre_tc, @Param("numero_tc") Integer numero_tc, @Param("fecha_vencimiento") java.sql.Date fecha_vencimiento, @Param("cv") Integer cv);
-    
-    @Modifying
-    @Transactional
-    @Query(value= "UPDATE Uservicios SET nombre_tc=: nombre_tc, numero_tc=: numero_tc, fecha_vencimiento=: fecha_vencimiento, cv=: cv WHERE id_servicios =:id_servicios AND id_usuario= :id_usuario", nativeQuery = true)
-    void actualizarUservicio(@Param("id_servicios") int id_servicios, @Param("id_usuario") int id_usuario, @Param("nombre_tc") String nombre_tc, @Param("numero_tc") Integer numero_tc, @Param("fecha_vencimiento") java.sql.Date fecha_vencimiento, @Param("cv") Integer cv);
+    @Query(value = """
+        INSERT INTO USERVICIOS (id_usuario, id_servicios, nombre_tc, numero_tc, fecha_vencimiento, cv)
+        VALUES (:id_usuario, USERVICIOS_ID_SERVICIOS_SEQ.NEXTVAL, :nombre_tc, :numero_tc, :fecha_vencimiento, :cv)
+        """, nativeQuery = true)
+    void insertarUservicio(@Param("id_usuario") Integer idUsuario,
+                           @Param("nombre_tc") String nombreTc,
+                           @Param("numero_tc") Integer numeroTc,
+                           @Param("fecha_vencimiento") Date fechaVencimiento,
+                           @Param("cv") Integer cv);
 
-    @Modifying
+    /* ===== UPDATE ===== */
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Transactional
-    @Query(value = "DELETE FROM Uservicios WHERE id_servicios=:id_servicios AND id_usuario= :id_usuario", nativeQuery = true)
-    void eliminarUservicio(@Param("id_servicios") int id_servicios, @Param("id_usuario") int id_usuario );
+    @Query(value = """
+        UPDATE USERVICIOS
+           SET nombre_tc = :nombre_tc,
+               numero_tc = :numero_tc,
+               fecha_vencimiento = :fecha_vencimiento,
+               cv = :cv
+         WHERE id_usuario = :id_usuario
+           AND id_servicios = :id_servicios
+        """, nativeQuery = true)
+    void actualizarUservicio(@Param("id_usuario") Integer idUsuario,
+                             @Param("id_servicios") Integer idServicios,
+                             @Param("nombre_tc") String nombreTc,
+                             @Param("numero_tc") Integer numeroTc,
+                             @Param("fecha_vencimiento") Date fechaVencimiento,
+                             @Param("cv") Integer cv);
+
+    /* ===== DELETE ===== */
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Transactional
+    @Query(value = "DELETE FROM USERVICIOS WHERE id_usuario = :id_usuario AND id_servicios = :id_servicios", nativeQuery = true)
+    void eliminarUservicio(@Param("id_usuario") Integer idUsuario,
+                           @Param("id_servicios") Integer idServicios);
 }

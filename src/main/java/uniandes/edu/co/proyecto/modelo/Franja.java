@@ -1,66 +1,60 @@
 package uniandes.edu.co.proyecto.modelo;
 
 import java.time.LocalDateTime;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinColumns;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Franja")
+@Table(name = "FRANJA")
 public class Franja {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id_franja")
-    private Integer id_franja;
+    @Column(name = "ID_FRANJA")
+    private Integer idFranja;
 
-    @Column(name = "hora_inicio")
-    private LocalDateTime hora_incio;
+    @Column(name = "HORA_INICIO")
+    private LocalDateTime horaInicio;
 
-    @Column(name = "hora_fin")
-    private LocalDateTime hora_fin;
+    @Column(name = "HORA_FIN")
+    private LocalDateTime horaFin;
 
+    @Column(name = "OCUPADO")
     private Boolean ocupado;
 
     @ManyToOne
-    @JoinColumn(name = "Vehiculo_id", referencedColumnName = "id")
+    @JoinColumn(name = "VEHICULO_ID", referencedColumnName = "ID")
     private Vehiculo vehiculo;
 
-    /* Asociación compuesta correcta a Uconductor */
     @ManyToOne
     @JoinColumns({
-        @JoinColumn(name = "Ucond_idcond",    referencedColumnName = "id_conductor"),
-        @JoinColumn(name = "Ucond_idusuario", referencedColumnName = "id_usuario")
+        @JoinColumn(name = "UCOND_IDCOND", referencedColumnName = "ID_CONDUCTOR"),
+        @JoinColumn(name = "UCOND_IDUSUARIO", referencedColumnName = "ID_USUARIO")
     })
     private Uconductor uconductor;
 
+    // Constructor vacío
     public Franja() { }
 
-    public Franja(Integer id_franja, LocalDateTime hora_incio, LocalDateTime hora_fin,
+    // Constructor completo
+    public Franja(Integer idFranja, LocalDateTime horaInicio, LocalDateTime horaFin,
                   Boolean ocupado, Vehiculo vehiculo, Uconductor uconductor) {
-        this.id_franja = id_franja;
-        this.hora_incio = hora_incio;
-        this.hora_fin = hora_fin;
+        this.idFranja = idFranja;
+        this.horaInicio = horaInicio;
+        this.horaFin = horaFin;
         this.ocupado = ocupado;
         this.vehiculo = vehiculo;
         this.uconductor = uconductor;
     }
 
-    public Integer getId_franja() { return id_franja; }
-    public void setId_franja(Integer id_franja) { this.id_franja = id_franja; }
+    // Getters y setters
+    public Integer getIdFranja() { return idFranja; }
+    public void setIdFranja(Integer idFranja) { this.idFranja = idFranja; }
 
-    public LocalDateTime getHora_incio() { return hora_incio; }
-    public void setHora_incio(LocalDateTime hora_incio) { this.hora_incio = hora_incio; }
+    public LocalDateTime getHoraInicio() { return horaInicio; }
+    public void setHoraInicio(LocalDateTime horaInicio) { this.horaInicio = horaInicio; }
 
-    public LocalDateTime getHora_fin() { return hora_fin; }
-    public void setHora_fin(LocalDateTime hora_fin) { this.hora_fin = hora_fin; }
+    public LocalDateTime getHoraFin() { return horaFin; }
+    public void setHoraFin(LocalDateTime horaFin) { this.horaFin = horaFin; }
 
     public Boolean getOcupado() { return ocupado; }
     public void setOcupado(Boolean ocupado) { this.ocupado = ocupado; }

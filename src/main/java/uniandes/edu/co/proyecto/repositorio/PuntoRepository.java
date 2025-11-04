@@ -1,38 +1,61 @@
 package uniandes.edu.co.proyecto.repositorio;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.transaction.annotation.Transactional;
 
+import jakarta.transaction.Transactional;
 import uniandes.edu.co.proyecto.modelo.Punto;
 
+public interface PuntoRepository extends JpaRepository<Punto, Integer> {
 
+    // LISTAR
+    @Query(value = "SELECT * FROM PUNTO", nativeQuery = true)
+    Collection<Punto> darPuntos();
 
-public interface PuntoRepository extends JpaRepository<Punto,Integer> {
+    // OBTENER POR PK
+    @Query(value = "SELECT * FROM PUNTO WHERE PUNTO_ID = :puntoId", nativeQuery = true)
+    Optional<Punto> darPunto(@Param("puntoId") int puntoId);
 
-    @Query(value= "SELECT * FROM Punto", nativeQuery = true)
-    Collection<Punto> darPuntos(); 
-    
-    @Query(value="SELECT * FROM Punto WHERE Punto_id= :Punto_id", nativeQuery = true)
-    Punto darPunto(@Param("Punto_id") int Punto_id);
-
-    
-    @Modifying
+    // INSERTAR (usa tu secuencia PUNTO_PUNTO_ID_SEQ)
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Transactional
-    @Query(value = "INSERT INTO Punto (Punto_id, direccion, latitud, longitud, Servicio_id, Ciudad_id) VALUES(Punto_Punto_id_SEQ.nextval, :direccion, :latitud, :longitud, :Servicio_id, :Ciudad_id)", nativeQuery= true)
-    void insertarPunto(@Param("direccion") String direccion, @Param("latitud") String latitud, @Param("longitud") String longitud, @Param("Servicio_id") Integer Servicio_id, @Param("Ciudad_id") Integer Ciudad_id);
+    @Query(value = """
+        INSERT INTO PUNTO (PUNTO_ID, DIRECCION, LATITUD, LONGITUD, SERVICIO_ID, CIUDAD_ID)
+        VALUES (PUNTO_PUNTO_ID_SEQ.NEXTVAL, :direccion, :latitud, :longitud, :servicioId, :ciudadId)
+        """, nativeQuery = true)
+    void insertarPunto(@Param("direccion") String direccion,
+                       @Param("latitud") String latitud,
+                       @Param("longitud") String longitud,
+                       @Param("servicioId") Integer servicioId,
+                       @Param("ciudadId") Integer ciudadId);
 
-    @Modifying
+    // ACTUALIZAR
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Transactional
-    @Query(value= "UPDATE Punto SET direccion=: direccion, latitud=: latitud, longitud=: longitud, Servicio_id=:Servicio_id, Ciudad_id=: Ciudad_id WHERE Punto_id =:Punto_id", nativeQuery = true)
-    void actualizarPunto(@Param("Punto_id") int Punto_id, @Param("direccion") String direccion, @Param("latitud") String latitud, @Param("longitud") String longitud, @Param("Servicio_id") Integer Servicio_id, @Param("Ciudad_id") Integer Ciudad_id);
-    
-    @Modifying
+    @Query(value = """
+        UPDATE PUNTO
+           SET DIRECCION   = :direccion,
+               LATITUD     = :latitud,
+               LONGITUD    = :longitud,
+               SERVICIO_ID = :servicioId,
+               CIUDAD_ID   = :ciudadId
+         WHERE PUNTO_ID    = :puntoId
+        """, nativeQuery = true)
+    void actualizarPunto(@Param("puntoId") int puntoId,
+                         @Param("direccion") String direccion,
+                         @Param("latitud") String latitud,
+                         @Param("longitud") String longitud,
+                         @Param("servicioId") Integer servicioId,
+                         @Param("ciudadId") Integer ciudadId);
+
+    // ELIMINAR
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Transactional
-    @Query(value = "DELETE FROM Punto WHERE Punto_id=:Punto_id", nativeQuery = true)
-    void eliminarPunto(@Param("Punto_id") int Punto_id );
+    @Query(value = "DELETE FROM PUNTO WHERE PUNTO_ID = :puntoId", nativeQuery = true)
+    void eliminarPunto(@Param("puntoId") int puntoId);
 }

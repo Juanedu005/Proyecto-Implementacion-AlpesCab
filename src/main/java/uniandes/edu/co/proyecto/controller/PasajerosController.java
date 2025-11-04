@@ -1,66 +1,59 @@
 package uniandes.edu.co.proyecto.controller;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
-import uniandes.edu.co.proyecto.modelo.Mercancia;
 import uniandes.edu.co.proyecto.modelo.Pasajeros;
 import uniandes.edu.co.proyecto.repositorio.PasajerosRepository;
 
 @Controller
 public class PasajerosController {
-    
 
     @Autowired
     private PasajerosRepository pasajerosRepository;
 
     @GetMapping("/pasajeros")
-    public String pasajeros(Model model){
+    public String listar(Model model) {
         model.addAttribute("pasajeros", pasajerosRepository.darPasajeros());
-        return model.toString();
+        return "pasajeros"; // nombre de la vista
     }
 
     @GetMapping("/pasajeros/new")
-    public String pasajeroForm(Model model){
-        model.addAttribute("pasajero", new Mercancia());
-        return "pasajeroNuevo";
+    public String formNuevo(Model model) {
+        model.addAttribute("pasajero", new Pasajeros());
+        return "pasajerosNuevo";
     }
 
     @PostMapping("/pasajeros/new/save")
-    public String pasajeroGuardar(@ModelAttribute Pasajeros pasajero){
-        pasajerosRepository.insertarPasajero(pasajero.getNivel());
+    public String guardarNuevo(@RequestParam("servicioId") int servicioId,
+                               @RequestParam("nivel") String nivel) {
+        pasajerosRepository.insertarPasajero(servicioId, nivel);
         return "redirect:/pasajeros";
     }
 
-    @PostMapping("/pasajeros/{Servicio_id}/edit")
-    public String pasajeroEditarForm(@PathVariable("Servicio_id") int Servicio_id, Model model){
-        Pasajeros pasajero = pasajerosRepository.darPasajero(Servicio_id);
-        
-        if (pasajero != null) {
-            model.addAttribute("pasajero", pasajero);
-            return "pasajeroEditar";
-        } else {
-            return "redirect:/pasajeros";
-        }
+    @GetMapping("/pasajeros/{id}/edit")
+    public String formEditar(@PathVariable("id") int id, Model model) {
+        Optional<Pasajeros> opt = pasajerosRepository.darPasajero(id);
+        if (opt.isEmpty()) return "redirect:/pasajeros";
+        model.addAttribute("pasajero", opt.get());
+        model.addAttribute("servicioId", id);
+        return "pasajerosEditar";
     }
 
-    @PostMapping("/pasajeros/{Servicio_id}/edit/save")
-    public String pasajeroEditarGuardar(@PathVariable("Servicio_id") int Servicio_id, @ModelAttribute Pasajeros pasajero){
-
-        pasajerosRepository.actualizarPasajero(Servicio_id, pasajero.getNivel());
+    @PostMapping("/pasajeros/{id}/edit/save")
+    public String guardarEdicion(@PathVariable("id") int id,
+                                 @RequestParam("nivel") String nivel) {
+        pasajerosRepository.actualizarPasajero(id, nivel);
         return "redirect:/pasajeros";
     }
 
-    @GetMapping("/pasajeros/{Servicio_id}/delete")
-    public String pasajeroEliminar(@PathVariable("Servicio_id") int Servicio_id){
-        pasajerosRepository.eliminarPasajero(Servicio_id);
+    @GetMapping("/pasajeros/{id}/delete")
+    public String eliminar(@PathVariable("id") int id) {
+        pasajerosRepository.eliminarPasajero(id);
         return "redirect:/pasajeros";
     }
-
-    
 }

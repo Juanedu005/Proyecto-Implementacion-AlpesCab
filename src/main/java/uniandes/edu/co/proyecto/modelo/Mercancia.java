@@ -1,48 +1,38 @@
 package uniandes.edu.co.proyecto.modelo;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Mercancia")
+@Table(name = "MERCANCIA")
 public class Mercancia {
-    
+
+    // PK real de la tabla
     @Id
-    @OneToOne
-    @JoinColumn(name = "Servicio_id", referencedColumnName = "id")
-    private Servicio Servicio_id;
+    @Column(name = "SERVICIO_ID", nullable = false)
+    private Integer servicioId;
 
-    private String ElementoRecogido; 
+    // Relación 1:1 con Servicio usando la misma PK
+    @OneToOne(optional = false)
+    @MapsId
+    @JoinColumn(name = "SERVICIO_ID", referencedColumnName = "ID")
+    private Servicio servicio;
 
-    public Mercancia(){;}
+    @Column(name = "ELEMENTORECOGIDO", nullable = false)
+    private String elementoRecogido;
 
-    public Mercancia(Servicio servicio_id, String elementoRecogido) {
-        Servicio_id = servicio_id;
-        ElementoRecogido = elementoRecogido;
+    public Mercancia() {}
+
+    public Mercancia(Servicio servicio, String elementoRecogido) {
+        this.servicio = servicio;               // @MapsId tomará servicio.getId() como PK
+        this.elementoRecogido = elementoRecogido;
     }
 
-    public Servicio getServicio_id() {
-        return Servicio_id;
-    }
+    public Integer getServicioId() { return servicioId; }
+    public void setServicioId(Integer servicioId) { this.servicioId = servicioId; }
 
-    public void setServicio_id(Servicio servicio_id) {
-        Servicio_id = servicio_id;
-    }
+    public Servicio getServicio() { return servicio; }
+    public void setServicio(Servicio servicio) { this.servicio = servicio; }
 
-    public String getElementoRecogido() {
-        return ElementoRecogido;
-    }
-
-    public void setElementoRecogido(String elementoRecogido) {
-        ElementoRecogido = elementoRecogido;
-    }
-
-    
-
-
-
-
+    public String getElementoRecogido() { return elementoRecogido; }
+    public void setElementoRecogido(String elementoRecogido) { this.elementoRecogido = elementoRecogido; }
 }

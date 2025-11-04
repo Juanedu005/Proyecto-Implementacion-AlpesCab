@@ -8,30 +8,31 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Resena")
+@Table(name = "RESENA") // opcional, pero suele ir en mayúsculas en Oracle
 public class Resena {
 
     @EmbeddedId
-    private ResenaPK pk;
+    private ResenaPK pk;  // Asegúrate que pk tenga las columnas: Ucond_idcond, Ucond_idusuario, User_idusuario, User_idser
 
     private String comentario;
     private Integer puntuacion;
 
-    /* FK compuesta a Uconductor: orden EXACTO como en UconductorPk (id_conductor, id_usuario) */
+    // === RELACIÓN A Uconductor (usa MISMAS columnas que están en la PK) ===
+    // → marcamos solo-lectura para evitar la duplicación de columnas
     @ManyToOne(optional = false)
     @JoinColumns({
-        @JoinColumn(name = "Ucond_idcond",    referencedColumnName = "id_conductor"),
-        @JoinColumn(name = "Ucond_idusuario", referencedColumnName = "id_usuario")
+        @JoinColumn(name = "UCOND_IDCOND",    referencedColumnName = "ID_CONDUCTOR", insertable = false, updatable = false),
+        @JoinColumn(name = "UCOND_IDUSUARIO", referencedColumnName = "ID_USUARIO",   insertable = false, updatable = false)
     })
     private Uconductor uconductor;
 
-    /* FK compuesta a Uservicios: orden EXACTO como en UserviciosPK (ID_USUARIO, ID_SERVICIOS) */
+    // === RELACIÓN A Uservicios (también comparte columnas con la PK) ===
     @ManyToOne(optional = false)
     @JoinColumns({
-        @JoinColumn(name = "User_idusuario", referencedColumnName = "ID_USUARIO"),
-        @JoinColumn(name = "User_idser",     referencedColumnName = "ID_SERVICIOS")
+        @JoinColumn(name = "USER_IDUSUARIO", referencedColumnName = "ID_USUARIO",    insertable = false, updatable = false),
+        @JoinColumn(name = "USER_IDSER",     referencedColumnName = "ID_SERVICIOS",  insertable = false, updatable = false)
     })
-    private Uservicios uservicios;
+    private Uservicios uservicios; // OJO: mantén el mismo nombre en campo y setters/getters
 
     public Resena() { }
 
@@ -41,7 +42,7 @@ public class Resena {
         this.comentario = comentario;
         this.puntuacion = puntuacion;
         this.uconductor = uconductor;
-        this.uservicios = uservicios;
+        this.uservicios = uservicios; // <-- asegúrate que el nombre del campo sea "uservicios" o cambia aquí a "uservicios"
     }
 
     public ResenaPK getPk() { return pk; }
@@ -57,5 +58,5 @@ public class Resena {
     public void setUconductor(Uconductor uconductor) { this.uconductor = uconductor; }
 
     public Uservicios getUservicios() { return uservicios; }
-    public void setUservicios(Uservicios uservicios) { this.uservicios = uservicios; }
+    public void setUservicios(Uservicios uservicios) { this.uservicios = uservicios; } // <-- corrige a "this.uservicios" o renombra el campo a "uservicios"
 }

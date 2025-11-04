@@ -1,55 +1,45 @@
 package uniandes.edu.co.proyecto.modelo;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Domicilio")
+@Table(name = "DOMICILIO")
 public class Domicilio {
-    
+
+    // PK real de la tabla
     @Id
-    @OneToOne
-    @JoinColumn(name = "Servicio_id", referencedColumnName = "id")
-    private Servicio Servicio_id;
+    @Column(name = "SERVICIO_ID", nullable = false)
+    private Integer servicioId;
 
-    private String nombre_restaurante; 
-    private String orden; 
+    // PK compartida con SERVICIO (usa el mismo valor de ID)
+    @OneToOne(optional = false)
+    @MapsId
+    @JoinColumn(name = "SERVICIO_ID", referencedColumnName = "ID")
+    private Servicio servicio;
 
-    public Domicilio(){;}
+    @Column(name = "NOMBRE_RESTAURANTE", nullable = false)
+    private String nombreRestaurante;
 
-    public Domicilio(Servicio servicio_id, String nombre_restaurante, String orden) {
-        Servicio_id = servicio_id;
-        this.nombre_restaurante = nombre_restaurante;
+    @Column(name = "ORDEN", nullable = false)
+    private String orden;
+
+    public Domicilio() {}
+
+    public Domicilio(Servicio servicio, String nombreRestaurante, String orden) {
+        this.servicio = servicio;         // @MapsId tomará servicio.getId() como PK
+        this.nombreRestaurante = nombreRestaurante;
         this.orden = orden;
     }
 
-    public Servicio getServicio_id() {
-        return Servicio_id;
-    }
+    public Integer getServicioId() { return servicioId; }
+    public void setServicioId(Integer servicioId) { this.servicioId = servicioId; }
 
-    public void setServicio_id(Servicio servicio_id) {
-        Servicio_id = servicio_id;
-    }
+    public Servicio getServicio() { return servicio; }
+    public void setServicio(Servicio servicio) { this.servicio = servicio; }
 
-    public String getNombre_restaurante() {
-        return nombre_restaurante;
-    }
+    public String getNombreRestaurante() { return nombreRestaurante; }
+    public void setNombreRestaurante(String nombreRestaurante) { this.nombreRestaurante = nombreRestaurante; }
 
-    public void setNombre_restaurante(String nombre_restaurante) {
-        this.nombre_restaurante = nombre_restaurante;
-    }
-
-    public String getOrden() {
-        return orden;
-    }
-
-    public void setOrden(String orden) {
-        this.orden = orden;
-    }
-
-    
-
+    public String getOrden() { return orden; }
+    public void setOrden(String orden) { this.orden = orden; }
 }
