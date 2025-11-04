@@ -95,4 +95,17 @@ public interface ServicioRepository extends JpaRepository<Servicio, Integer> {
     List<Object[]> rfc4UtilizacionPorCiudadYRango(@Param("ciudad") String ciudad,
                                                   @Param("fechaIni") LocalDateTime fechaIni,
                                                   @Param("fechaFin") LocalDateTime fechaFin);
-}
+
+
+
+
+    // ===== RFC1: histórico por usuario (join USERVICIOS -> SERVICIO) =====
+    @Query(value = """
+    SELECT s.* 
+      FROM SERVICIO s
+      JOIN USERVICIOS u ON u.ID_SERVICIOS = s.ID
+     WHERE u.ID_USUARIO = :usuarioId
+     ORDER BY s.HORA_INICIO
+    """, nativeQuery = true)
+    List<Servicio> listarHistoricoUsuario(@Param("usuarioId") int usuarioId);
+}                                                
