@@ -1,0 +1,170 @@
+{
+  "info": {
+    "_postman_id": "2c098a57-bcdf-484b-a8a6-ec35591d8c8a",
+    "name": "Sistrans - Entrega II (RF8 + RFC1 + Concurrencia)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Colección para probar RF8 (transacción) y RFC1 (dos aislamientos) con escenarios de concurrencia.\n\nInstrucciones resumidas:\n1) Configura el entorno 'Sistrans-Local' y ajusta variables (baseUrl, usuarioId, etc.).\n2) Corre 'RFC1 / Serializable (GET)'. Dentro de los 30s, ejecuta 'RF8 / Solicitar (POST)'. Observa antes vs después.\n3) Repite con 'RFC1 / ReadCommitted (GET)'."
+  },
+  "item": [
+    {
+      "name": "RF8 / Solicitar (POST)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('HTTP 2xx', function () { pm.response.to.have.status(/2\\d\\d/); });",
+              "console.log('RF8 respuesta:', pm.response.json());",
+              "const json = pm.response.json();",
+              "if (json && json.id) { pm.environment.set('ultimoServicioId', json.id); }"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"usuarioId\": \"{{usuarioId}}\",\n  \"puntoOrigenId\": \"{{puntoOrigenId}}\",\n  \"puntoDestinoId\": \"{{puntoDestinoId}}\",\n  \"tarifaFija\": \"{{tarifaFija}}\",\n  \"distanciaKm\": \"{{distanciaKm}}\",\n  \"forzarError\": false\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/rf8/solicitar",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rf8",
+            "solicitar"
+          ]
+        }
+      }
+    },
+    {
+      "name": "RF8 / Solicitar con error (POST)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Debe fallar o hacer rollback', function(){",
+              "  pm.expect(pm.response.code).to.be.oneOf([400,409,422,500]);",
+              "});",
+              "console.warn('RF8 con error (esperado) =>', pm.response.text());"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"usuarioId\": \"{{usuarioId}}\",\n  \"puntoOrigenId\": \"{{puntoOrigenId}}\",\n  \"puntoDestinoId\": \"{{puntoDestinoId}}\",\n  \"tarifaFija\": \"{{tarifaFija}}\",\n  \"distanciaKm\": \"{{distanciaKm}}\",\n  \"forzarError\": true\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/rf8/solicitar",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rf8",
+            "solicitar"
+          ]
+        }
+      }
+    },
+    {
+      "name": "RFC1 / Serializable (GET)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('HTTP 2xx', function () { pm.response.to.have.status(/2\\d\\d/); });",
+              "const r = pm.response.json();",
+              "console.log('RFC1 SERIALIZABLE =>', r);",
+              "if (r && r.antes && r.despues) {",
+              "  console.log('Antes:', r.antes.length, 'registros');",
+              "  console.log('Después:', r.despues.length, 'registros');",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/rfc1/serializable?usuarioId={{usuarioId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rfc1",
+            "serializable"
+          ],
+          "query": [
+            {
+              "key": "usuarioId",
+              "value": "{{usuarioId}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "RFC1 / ReadCommitted (GET)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('HTTP 2xx', function () { pm.response.to.have.status(/2\\d\\d/); });",
+              "const r = pm.response.json();",
+              "console.log('RFC1 READ_COMMITTED =>', r);",
+              "if (r && r.antes && r.despues) {",
+              "  console.log('Antes:', r.antes.length, 'registros');",
+              "  console.log('Después:', r.despues.length, 'registros');",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/rfc1/read-committed?usuarioId={{usuarioId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rfc1",
+            "read-committed"
+          ],
+          "query": [
+            {
+              "key": "usuarioId",
+              "value": "{{usuarioId}}"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
