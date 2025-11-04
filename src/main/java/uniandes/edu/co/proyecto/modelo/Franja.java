@@ -8,9 +8,8 @@ import jakarta.persistence.*;
 public class Franja {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID_FRANJA")
-    private Integer idFranja;
+    private Integer idFranja; // <- SIN @GeneratedValue (lo asigna el trigger)
 
     @Column(name = "HORA_INICIO")
     private LocalDateTime horaInicio;
@@ -19,7 +18,7 @@ public class Franja {
     private LocalDateTime horaFin;
 
     @Column(name = "OCUPADO")
-    private Boolean ocupado;
+    private Integer ocupado;
 
     @ManyToOne
     @JoinColumn(name = "VEHICULO_ID", referencedColumnName = "ID")
@@ -32,12 +31,10 @@ public class Franja {
     })
     private Uconductor uconductor;
 
-    // Constructor vacío
     public Franja() { }
 
-    // Constructor completo
     public Franja(Integer idFranja, LocalDateTime horaInicio, LocalDateTime horaFin,
-                  Boolean ocupado, Vehiculo vehiculo, Uconductor uconductor) {
+                  Integer ocupado, Vehiculo vehiculo, Uconductor uconductor) {
         this.idFranja = idFranja;
         this.horaInicio = horaInicio;
         this.horaFin = horaFin;
@@ -46,7 +43,6 @@ public class Franja {
         this.uconductor = uconductor;
     }
 
-    // Getters y setters
     public Integer getIdFranja() { return idFranja; }
     public void setIdFranja(Integer idFranja) { this.idFranja = idFranja; }
 
@@ -56,8 +52,8 @@ public class Franja {
     public LocalDateTime getHoraFin() { return horaFin; }
     public void setHoraFin(LocalDateTime horaFin) { this.horaFin = horaFin; }
 
-    public Boolean getOcupado() { return ocupado; }
-    public void setOcupado(Boolean ocupado) { this.ocupado = ocupado; }
+    public Integer getOcupado() { return ocupado; }
+    public void setOcupado(Integer ocupado) { this.ocupado = ocupado; }
 
     public Vehiculo getVehiculo() { return vehiculo; }
     public void setVehiculo(Vehiculo vehiculo) { this.vehiculo = vehiculo; }

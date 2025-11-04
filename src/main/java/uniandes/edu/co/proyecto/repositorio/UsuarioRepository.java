@@ -25,7 +25,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
            nativeQuery = true)
     void insertarUsuario(@Param("nombre") String nombre,
                          @Param("email") String email,
-                         @Param("cedula") Integer cedula);
+                         @Param("cedula") String cedula);
 
     @Modifying
     @Transactional
@@ -36,7 +36,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     void actualizarUsuario(@Param("id") int id,
                            @Param("nombre") String nombre,
                            @Param("email") String email,
-                           @Param("cedula") Integer cedula);
+                           @Param("cedula") String cedula);
     
     @Modifying
     @Transactional

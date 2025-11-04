@@ -1,26 +1,34 @@
 package uniandes.edu.co.proyecto.modelo;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Usuario")
+@Table(name = "USUARIO")
 public class Usuario {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USUARIO_SEQ")
+    @SequenceGenerator(
+        name = "USUARIO_SEQ",
+        sequenceName = "ISIS2304A02202520.USUARIO_ID_SEQ",
+        allocationSize = 1
+    )
     private Integer id;
 
     private String nombre;
-    private Integer cedula;
+    private String cedula;
     private String email;
 
     public Usuario() { }
 
-    public Usuario(String nombre, Integer cedula, String email) {
+    public Usuario(String nombre, String cedula, String email) {
         this.nombre = nombre;
         this.cedula = cedula;
         this.email = email;
@@ -42,11 +50,11 @@ public class Usuario {
         this.nombre = nombre;
     }
 
-    public Integer getCedula() {
+    public String getCedula() {
         return cedula;
     }
 
-    public void setCedula(Integer cedula) {
+    public void setCedula(String cedula) {
         this.cedula = cedula;
     }
 

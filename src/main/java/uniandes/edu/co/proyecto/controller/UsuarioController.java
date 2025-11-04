@@ -20,9 +20,9 @@ public class UsuarioController {
 
     @GetMapping("/usuarios")
     public String usuarios(Model model){
-        model.addAttribute("usuarios", usuarioRepository.darUsuarios());
-        return model.toString();
-    }
+    model.addAttribute("usuarios", usuarioRepository.darUsuarios());
+    return "usuarios"; 
+}
 
     @GetMapping("/usuarios/new")
     public String usuarioForm(Model model){
@@ -36,17 +36,17 @@ public class UsuarioController {
         return "redirect:/usuarios";
     }
 
-    @PostMapping("/usuarios/{id}/edit") 
+    @GetMapping("/usuarios/{id}/edit")
     public String usuarioEditarForm(@PathVariable("id") int id, Model model){
-        Usuario usuario = usuarioRepository.darUsuario(id);
-        
-        if (usuario != null) {
-            model.addAttribute("usuario", usuario);
-            return "usuarioEditar";
-        } else {
-            return "redirect:/usuarios";
-        }
+    Usuario usuario = usuarioRepository.darUsuario(id);
+    if (usuario != null) {
+        model.addAttribute("usuario", usuario);
+        return "usuarioEditar";
+    } else {
+        return "redirect:/usuarios";
     }
+}
+
 
     @PostMapping("/usuarios/{id}/edit/save")
     public String usuarioEditarGuardar(@PathVariable("id") int id, @ModelAttribute Usuario usuario){
