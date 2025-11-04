@@ -7,47 +7,40 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="Servicio")
+@Table(name = "Servicio")
 public class Servicio {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id; 
+    private Integer id;
 
-    private Integer tarifa_fija; 
-    private Integer distancia_recorrida; 
+    private Integer tarifa_fija;
+    private Integer distancia_recorrida;
     private LocalDateTime hora_incio;
-    private LocalDateTime hora_fin; 
+    private LocalDateTime hora_fin;
 
     @OneToOne
-    @JoinColumn(name="P_Punto_id", referencedColumnName = "Punto_id")
-    private Punto P_Punto_id; 
+    @JoinColumn(name = "P_Punto_id", referencedColumnName = "Punto_id")
+    private Punto P_Punto_id;
 
-    @ManyToOne
-    @JoinColumn(name="User_idser", referencedColumnName = "id_servicios")
-    private Uservicios User_idser; 
+    // Si quieres la relación inversa hacia Uservicios, puedes agregar:
+    // @OneToMany(mappedBy = "servicio")
+    // private List<Uservicios> uservicios;
 
-    @ManyToOne
-    @JoinColumn(name="User_idusuario", referencedColumnName = "id_usuario")
-    private Uservicios User_idusuario; 
-
-    public Servicio(){;}
+    public Servicio() { }
 
     public Servicio(Integer id, Integer tarifa_fija, Integer distancia_recorrida, LocalDateTime hora_incio,
-            LocalDateTime hora_fin, Punto p_Punto_id, Uservicios user_idser, Uservicios user_idusuario) {
+                    LocalDateTime hora_fin, Punto p_Punto_id) {
         this.id = id;
         this.tarifa_fija = tarifa_fija;
         this.distancia_recorrida = distancia_recorrida;
         this.hora_incio = hora_incio;
         this.hora_fin = hora_fin;
-        P_Punto_id = p_Punto_id;
-        User_idser = user_idser;
-        User_idusuario = user_idusuario;
+        this.P_Punto_id = p_Punto_id;
     }
 
     public Integer getId() {
@@ -95,29 +88,6 @@ public class Servicio {
     }
 
     public void setP_Punto_id(Punto p_Punto_id) {
-        P_Punto_id = p_Punto_id;
+        this.P_Punto_id = p_Punto_id;
     }
-
-    public Uservicios getUser_idser() {
-        return User_idser;
-    }
-
-    public void setUser_idser(Uservicios user_idser) {
-        User_idser = user_idser;
-    }
-
-    public Uservicios getUser_idusuario() {
-        return User_idusuario;
-    }
-
-    public void setUser_idusuario(Uservicios user_idusuario) {
-        User_idusuario = user_idusuario;
-    }
-
-    
-
-
-
-    
-    
 }

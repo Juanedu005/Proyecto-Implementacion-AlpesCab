@@ -1,49 +1,46 @@
 package uniandes.edu.co.proyecto.modelo;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinColumns;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-
 @Entity
-@Table(name="Vehiculo")
-
+@Table(name = "Vehiculo")
 public class Vehiculo {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    
 
-    private String tipo; 
-    private String marca; 
-    private String modelo; 
-    private String color; 
-    private String placa; 
-    private Integer capacidad; 
-
-    @ManyToOne
-    @JoinColumn(name="Ciudad_id", referencedColumnName = "id")
-    private Ciudad Ciudad_id; 
+    private String tipo;
+    private String marca;
+    private String modelo;
+    private String color;
+    private String placa;
+    private Integer capacidad;
 
     @ManyToOne
-    @JoinColumn(name="Ucond_idcond", referencedColumnName = "id_conductor")
-    private Uconductor Ucond_idcond;
+    @JoinColumn(name = "Ciudad_id", referencedColumnName = "id")
+    private Ciudad ciudad;
 
-    
+    /* Asociación compuesta correcta a Uconductor */
     @ManyToOne
-    @JoinColumn(name="Ucond_idusuario", referencedColumnName = "id_conductor")
-    private Uconductor Ucond_idusuario;
+    @JoinColumns({
+        @JoinColumn(name = "Ucond_idcond",    referencedColumnName = "id_conductor"),
+        @JoinColumn(name = "Ucond_idusuario", referencedColumnName = "id_usuario")
+    })
+    private Uconductor uconductor;
 
-    
+    public Vehiculo() { }
 
-
-    public Vehiculo(Integer id, String tipo, String marca, String modelo, String color, String placa, Integer capacidad,
-            Ciudad ciudad_id, Uconductor ucond_idcond, Uconductor ucond_idusuario) {
+    public Vehiculo(Integer id, String tipo, String marca, String modelo, String color,
+                    String placa, Integer capacidad, Ciudad ciudad, Uconductor uconductor) {
         this.id = id;
         this.tipo = tipo;
         this.marca = marca;
@@ -51,123 +48,34 @@ public class Vehiculo {
         this.color = color;
         this.placa = placa;
         this.capacidad = capacidad;
-        Ciudad_id = ciudad_id;
-        Ucond_idcond = ucond_idcond;
-        Ucond_idusuario = ucond_idusuario;
+        this.ciudad = ciudad;
+        this.uconductor = uconductor;
     }
 
-    public Vehiculo(){;}
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
+    public String getTipo() { return tipo; }
+    public void setTipo(String tipo) { this.tipo = tipo; }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    public String getMarca() { return marca; }
+    public void setMarca(String marca) { this.marca = marca; }
 
+    public String getModelo() { return modelo; }
+    public void setModelo(String modelo) { this.modelo = modelo; }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
+    public String getColor() { return color; }
+    public void setColor(String color) { this.color = color; }
 
+    public String getPlaca() { return placa; }
+    public void setPlaca(String placa) { this.placa = placa; }
 
-    public void setMarca(String marca) {
-        this.marca = marca;
-    }
+    public Integer getCapacidad() { return capacidad; }
+    public void setCapacidad(Integer capacidad) { this.capacidad = capacidad; }
 
+    public Ciudad getCiudad() { return ciudad; }
+    public void setCiudad(Ciudad ciudad) { this.ciudad = ciudad; }
 
-    public void setModelo(String modelo) {
-        this.modelo = modelo;
-    }
-
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-
-    public void setPlaca(String placa) {
-        this.placa = placa;
-    }
-
-
-    public void setCapacidad(Integer capacidad) {
-        this.capacidad = capacidad;
-    }
-
-
-    public void setCiudad_id(Ciudad ciudad_id) {
-        Ciudad_id = ciudad_id;
-    }
-
-
-    public void setUcond_idcond(Uconductor ucond_idcond) {
-        Ucond_idcond = ucond_idcond;
-    }
-
-
-    public void setUcond_idusuario(Uconductor ucond_idusuario) {
-        Ucond_idusuario = ucond_idusuario;
-    }
-
-
-    public Integer getId() {
-        return id;
-    }
-
-
-    public String getTipo() {
-        return tipo;
-    }
-
-
-    public String getMarca() {
-        return marca;
-    }
-
-
-    public String getModelo() {
-        return modelo;
-    }
-
-
-    public String getColor() {
-        return color;
-    }
-
-
-    public String getPlaca() {
-        return placa;
-    }
-
-
-    public Integer getCapacidad() {
-        return capacidad;
-    }
-
-
-    public Ciudad getCiudad_id() {
-        return Ciudad_id;
-    }
-
-
-    public Uconductor getUcond_idcond() {
-        return Ucond_idcond;
-    }
-
-
-    public Uconductor getUcond_idusuario() {
-        return Ucond_idusuario;
-    }
-
-
-    
-
-    
-
-
-
-    
-    
-    
-
-    
+    public Uconductor getUconductor() { return uconductor; }
+    public void setUconductor(Uconductor uconductor) { this.uconductor = uconductor; }
 }

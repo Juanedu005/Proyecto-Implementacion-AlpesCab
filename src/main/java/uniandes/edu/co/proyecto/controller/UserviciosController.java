@@ -31,7 +31,7 @@ public class UserviciosController {
 
     @PostMapping("/uservicios/new/save")
     public String uservicioGuardar(@ModelAttribute Uservicios uservicio){
-        userviciosRepository.insertarUservicio(uservicio.getPk().getId_servicios(), uservicio.getPk().getId_usuario().getId(), uservicio.getNombre_tc(), uservicio.getNumero_tc(), uservicio.getFecha_vencimiento(), uservicio.getCv());
+        userviciosRepository.insertarUservicio(uservicio.getPk().getId_servicios(), uservicio.getPk().getId_usuario(), uservicio.getNombre_tc(), uservicio.getNumero_tc(), uservicio.getFecha_vencimiento(), uservicio.getCv());
         return "redirect:/uservicios";
     }
 

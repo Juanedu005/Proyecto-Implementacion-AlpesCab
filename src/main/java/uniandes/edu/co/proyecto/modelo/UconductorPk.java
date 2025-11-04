@@ -1,58 +1,42 @@
 package uniandes.edu.co.proyecto.modelo;
 
 import java.io.Serializable;
+import java.util.Objects;
 
-
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 
 @Embeddable
 public class UconductorPk implements Serializable {
-    @OneToOne
-    @JoinColumn(name="id_usuario", referencedColumnName = "id")
-    private Usuario id_usuario;
 
-    @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private Integer id_conductor; 
+    @Column(name = "id_conductor")
+    private Integer id_conductor;
 
-        public UconductorPk() {
-            super();
-    }
+    @Column(name = "id_usuario")
+    private Integer id_usuario;
 
-    
-    public UconductorPk(Usuario id_usuario, Integer id_conductor) {
-            super();
-            this.id_usuario = id_usuario;
-            this.id_conductor = id_conductor;
-        }
+    public UconductorPk() { }
 
-    
-    public void setId_usuario(Usuario id_usuario) {
+    public UconductorPk(Integer id_conductor, Integer id_usuario) {
+        this.id_conductor = id_conductor;
         this.id_usuario = id_usuario;
     }
 
+    public Integer getId_conductor() { return id_conductor; }
+    public void setId_conductor(Integer id_conductor) { this.id_conductor = id_conductor; }
 
-    public void setId_conductor(Integer id_conductor) {
-        this.id_conductor = id_conductor;
+    public Integer getId_usuario() { return id_usuario; }
+    public void setId_usuario(Integer id_usuario) { this.id_usuario = id_usuario; }
+
+    @Override public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof UconductorPk)) return false;
+        UconductorPk that = (UconductorPk) o;
+        return Objects.equals(id_conductor, that.id_conductor) &&
+               Objects.equals(id_usuario, that.id_usuario);
     }
 
-
-    
-
-    public Usuario getId_usuario() {
-        return id_usuario;
+    @Override public int hashCode() {
+        return Objects.hash(id_conductor, id_usuario);
     }
-
-
-    public Integer getId_conductos() {
-        return id_conductor;
-    }
-
-
-
 }

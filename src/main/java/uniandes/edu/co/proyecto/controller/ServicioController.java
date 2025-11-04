@@ -17,32 +17,44 @@ import uniandes.edu.co.proyecto.repositorio.ServicioRepository;
 
 @Controller
 public class ServicioController {
-    
+
     @Autowired
     private ServicioRepository servicioRepository;
 
     @GetMapping("/servicios")
-    public String servicios(Model model){
+    public String servicios(Model model) {
         model.addAttribute("servicios", servicioRepository.darServicios());
-        return model.toString();
+        // Debes retornar el nombre del template que lista servicios
+        return "servicios";
     }
 
     @GetMapping("/servicios/new")
-    public String servicioForm(Model model){
+    public String servicioForm(Model model) {
         model.addAttribute("servicio", new Servicio());
         return "servicioNuevo";
     }
 
     @PostMapping("/servicios/new/save")
-    public String servicioGuardar(@ModelAttribute Servicio servicio){
-        servicioRepository.insertarServicio(servicio.getTarifa_fija(), servicio.getDistancia_recorrida(), servicio.getHora_incio(), servicio.getHora_fin(), servicio.getP_Punto_id().getPunto_id(), servicio.getUser_idser().getPk().getId_servicios(), servicio.getUser_idusuario().getPk().getId_usuario().getId());
+    public String servicioGuardar(@ModelAttribute Servicio servicio) {
+        // Ahora Servicio NO maneja Uservicios aquí. Solo inserta sus propios campos.
+        // Asegúrate de que tu repo reciba exactamente estos 5 parámetros
+        // (tarifa_fija, distancia_recorrida, hora_inicio, hora_fin, P_Punto_id)
+        Integer puntoId = (servicio.getP_Punto_id() != null) ? servicio.getP_Punto_id().getPunto_id() : null;
+
+        servicioRepository.insertarServicio(
+            servicio.getTarifa_fija(),
+            servicio.getDistancia_recorrida(),
+            servicio.getHora_incio(),  // si en la BD la columna es hora_inicio, ajusta en la entidad con @Column(name="hora_inicio")
+            servicio.getHora_fin(),
+            puntoId
+        );
+
         return "redirect:/servicios";
     }
 
     @PostMapping("/servicios/{id}/edit")
-    public String servicioEditarForm(@PathVariable("id") int id, Model model){
+    public String servicioEditarForm(@PathVariable("id") int id, Model model) {
         Servicio servicio = servicioRepository.darServicio(id);
-        
         if (servicio != null) {
             model.addAttribute("servicio", servicio);
             return "servicioEditar";
@@ -52,30 +64,38 @@ public class ServicioController {
     }
 
     @PostMapping("/servicios/{id}/edit/save")
-    public String servicioEditarGuardar(@PathVariable("id") int id, @ModelAttribute Servicio servicio){
+    public String servicioEditarGuardar(@PathVariable("id") int id, @ModelAttribute Servicio servicio) {
+        Integer puntoId = (servicio.getP_Punto_id() != null) ? servicio.getP_Punto_id().getPunto_id() : null;
 
-        servicioRepository.actualizarServicio(id, servicio.getTarifa_fija(), servicio.getDistancia_recorrida(), servicio.getHora_incio(), servicio.getHora_fin(), servicio.getP_Punto_id().getPunto_id(), servicio.getUser_idser().getPk().getId_servicios(), servicio.getUser_idusuario().getPk().getId_usuario().getId());
+        servicioRepository.actualizarServicio(
+            id,
+            servicio.getTarifa_fija(),
+            servicio.getDistancia_recorrida(),
+            servicio.getHora_incio(),  // ver nota de columna más abajo
+            servicio.getHora_fin(),
+            puntoId
+        );
+
         return "redirect:/servicios";
     }
 
     @GetMapping("/servicios/{id}/delete")
-    public String servicioEliminar(@PathVariable("id") int id){
+    public String servicioEliminar(@PathVariable("id") int id) {
         servicioRepository.eliminarServicio(id);
         return "redirect:/servicios";
     }
 
     // ========================= RFC1 =========================
-    // Histórico de servicios de un usuario de servicios 
+    // Ojo: alinea los nombres del path con los @PathVariable
     @GetMapping("/servicios/{idUsuario}/{idServicio}/historial")
     public String rfc1HistoricoPorUsuario(
-            @PathVariable("id_usuario") int idUsuario,
-            @PathVariable("id_conductor") int idServicio,
+            @PathVariable("idUsuario") int idUsuario,
+            @PathVariable("idServicio") int idServicio,
             Model model) {
 
         model.addAttribute("historial",
             servicioRepository.rfc1HistoricoPorUsuario(idUsuario, idServicio));
 
-        // Vista sugerida (ajústala a tu template real)
         return "serviciosHistorial";
     }
 
@@ -97,7 +117,6 @@ public class ServicioController {
             )
         );
 
-        return "serviciosUsoCiudad"; // <-- aquí está el return de la vista
+        return "serviciosUsoCiudad";
     }
-
 }

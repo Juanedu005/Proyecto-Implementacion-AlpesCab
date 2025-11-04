@@ -3,91 +3,59 @@ package uniandes.edu.co.proyecto.modelo;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinColumns;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="Resena")
+@Table(name = "Resena")
 public class Resena {
 
     @EmbeddedId
-    private ResenaPK pk; 
+    private ResenaPK pk;
 
-    private String comentario; 
-    private Integer puntuacion; 
+    private String comentario;
+    private Integer puntuacion;
 
-    @ManyToOne
-    @JoinColumn(name="Ucond_idcond", referencedColumnName = "id_conductor")
-    private Uconductor Ucond_idcond; 
+    /* FK compuesta a Uconductor: orden EXACTO como en UconductorPk (id_conductor, id_usuario) */
+    @ManyToOne(optional = false)
+    @JoinColumns({
+        @JoinColumn(name = "Ucond_idcond",    referencedColumnName = "id_conductor"),
+        @JoinColumn(name = "Ucond_idusuario", referencedColumnName = "id_usuario")
+    })
+    private Uconductor uconductor;
 
+    /* FK compuesta a Uservicios: orden EXACTO como en UserviciosPK (ID_USUARIO, ID_SERVICIOS) */
+    @ManyToOne(optional = false)
+    @JoinColumns({
+        @JoinColumn(name = "User_idusuario", referencedColumnName = "ID_USUARIO"),
+        @JoinColumn(name = "User_idser",     referencedColumnName = "ID_SERVICIOS")
+    })
+    private Uservicios uservicios;
 
-    @ManyToOne
-    @JoinColumn(name="User_idser", referencedColumnName = "id_sercivicios")
-    private Uservicios User_idser;
+    public Resena() { }
 
-
-    public Resena(){;}
-
-
-    public Resena(ResenaPK pk, String comentario, Integer puntuacion, Uconductor ucond_idcond, Uservicios user_idser) {
+    public Resena(ResenaPK pk, String comentario, Integer puntuacion,
+                  Uconductor uconductor, Uservicios uservicios) {
         this.pk = pk;
         this.comentario = comentario;
         this.puntuacion = puntuacion;
-        Ucond_idcond = ucond_idcond;
-        User_idser = user_idser;
+        this.uconductor = uconductor;
+        this.uservicios = uservicios;
     }
 
+    public ResenaPK getPk() { return pk; }
+    public void setPk(ResenaPK pk) { this.pk = pk; }
 
-    public ResenaPK getPk() {
-        return pk;
-    }
+    public String getComentario() { return comentario; }
+    public void setComentario(String comentario) { this.comentario = comentario; }
 
+    public Integer getPuntuacion() { return puntuacion; }
+    public void setPuntuacion(Integer puntuacion) { this.puntuacion = puntuacion; }
 
-    public void setPk(ResenaPK pk) {
-        this.pk = pk;
-    }
+    public Uconductor getUconductor() { return uconductor; }
+    public void setUconductor(Uconductor uconductor) { this.uconductor = uconductor; }
 
-
-    public String getComentario() {
-        return comentario;
-    }
-
-
-    public void setComentario(String comentario) {
-        this.comentario = comentario;
-    }
-
-
-    public Integer getPuntuacion() {
-        return puntuacion;
-    }
-
-
-    public void setPuntuacion(Integer puntuacion) {
-        this.puntuacion = puntuacion;
-    }
-
-
-    public Uconductor getUcond_idcond() {
-        return Ucond_idcond;
-    }
-
-
-    public void setUcond_idcond(Uconductor ucond_idcond) {
-        Ucond_idcond = ucond_idcond;
-    }
-
-
-    public Uservicios getUser_idser() {
-        return User_idser;
-    }
-
-
-    public void setUser_idser(Uservicios user_idser) {
-        User_idser = user_idser;
-    }
-
-    
-    
-    
+    public Uservicios getUservicios() { return uservicios; }
+    public void setUservicios(Uservicios uservicios) { this.uservicios = uservicios; }
 }

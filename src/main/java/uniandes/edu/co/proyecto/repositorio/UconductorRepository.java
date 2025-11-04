@@ -11,34 +11,35 @@ import org.springframework.transaction.annotation.Transactional;
 import uniandes.edu.co.proyecto.modelo.Uconductor;
 import uniandes.edu.co.proyecto.modelo.UconductorPk;
 
-
 public interface UconductorRepository extends JpaRepository<Uconductor, UconductorPk> {
 
-    @Query(value= "SELECT * FROM Uconductor", nativeQuery = true)
+    @Query(value = "SELECT * FROM Uconductor", nativeQuery = true)
     Collection<Uconductor> darUconductors();
-    
-    @Query(value="SELECT * FROM Uconductor WHERE id_conductor= :id_conductor AND id_usuario= :id_usuario", nativeQuery = true)
+
+    @Query(value = "SELECT * FROM Uconductor WHERE id_conductor = :id_conductor AND id_usuario = :id_usuario", nativeQuery = true)
     Uconductor darUconductor(@Param("id_conductor") int id_conductor, @Param("id_usuario") int id_usuario);
-        
+
+    /* INSERT coherente con trigger:
+       - Si :id_conductor es NULL -> el trigger autogenera
+       - :id_usuario debe existir en USUARIO
+    */
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO Uconductor (id_conductor, id_usuario) VALUES (Uconductor_id_conductor_SEQ.nextval,Usuario_id_SEQ.nextval)", nativeQuery = true)
+    @Query(value = "INSERT INTO Uconductor (id_conductor, id_usuario) VALUES (:id_conductor, :id_usuario)", nativeQuery = true)
     void insertarUconductor(@Param("id_conductor") Integer id_conductor, @Param("id_usuario") Integer id_usuario);
 
+    /* UPDATE no-op para mantener contrato (no hay campos que actualizar en práctica) */
     @Modifying
     @Transactional
-    @Query(value = "UPDATE Uconductor SET  WHERE id_conductor =:id_conductor AND id_usuario= :id_usuario", nativeQuery = true)
+    @Query(value = "UPDATE Uconductor SET id_usuario = id_usuario WHERE id_conductor = :id_conductor AND id_usuario = :id_usuario", nativeQuery = true)
     void actualizarUconductor(@Param("id_conductor") int id_conductor, @Param("id_usuario") int id_usuario);
 
     @Modifying
     @Transactional
-    @Query(value = "DELETE FROM Uconductor WHERE id_conductor=:id_conductor AND id_usuario= :id_usuario", nativeQuery = true)
-    void eliminarUconductor(@Param("id_conductor") int id_conductor, @Param("id_usuario") int id_usuario );
+    @Query(value = "DELETE FROM Uconductor WHERE id_conductor = :id_conductor AND id_usuario = :id_usuario", nativeQuery = true)
+    void eliminarUconductor(@Param("id_conductor") int id_conductor, @Param("id_usuario") int id_usuario);
 
-
-     // ========================= RFC2 =========================
-    // Top 20 conductores con más servicios prestados
-    // Devuelve: id_conductor, id_usuario_conductor, nombre, email, cantidad_servicios
+    // ========================= RFC2 =========================
     @Query(value =
         "WITH svc_asig AS ( " +
         "  SELECT s.id, f.Ucond_idcond, f.Ucond_idusuario " +
@@ -58,9 +59,7 @@ public interface UconductorRepository extends JpaRepository<Uconductor, Uconduct
         nativeQuery = true)
     Collection<Object[]> rfc2Top20Conductores();
 
-
     // ========================= RFC3 =========================
-    // Total de dinero obtenido por un conductor, por cada vehículo y discriminado por servicio
     @Query(value =
         "WITH svc_asig AS ( " +
         "  SELECT s.id, f.Vehiculo_id " +
@@ -85,10 +84,8 @@ public interface UconductorRepository extends JpaRepository<Uconductor, Uconduct
         "ORDER BY sa.Vehiculo_id, t.tipo",
         nativeQuery = true)
     Collection<Object[]> rfc3DineroPorVehiculoYTipo(
-        @Param("id_conductor") int idConductor,
-        @Param("id_usuario") int idUsuarioConductor,
+        @Param("idConductor") int idConductor,
+        @Param("idUsuarioConductor") int idUsuarioConductor,
         @Param("comisionPct") double comisionPct
     );
-
-
 }
