@@ -18,7 +18,6 @@ public class VehiculoRestController {
     @Autowired
     private VehiculoRepository repo;
 
-    // Para validaciones rápidas (existencia en BD y recuperar ID)
     @Autowired
     private JdbcTemplate jdbc;
 
@@ -43,7 +42,6 @@ public class VehiculoRestController {
     @PostMapping
     public ResponseEntity<?> crear(@RequestBody Map<String, Object> body) {
         try {
-            // 1) Parseo seguro (acepta snake_case y camelCase)
             String tipo   = getStr(body, "tipo");
             String marca  = getStr(body, "marca");
             String modelo = getStr(body, "modelo");
@@ -64,7 +62,6 @@ public class VehiculoRestController {
                 ));
             }
 
-            // 2) Validaciones de existencia (evita errores posteriores)
             Integer existeCiudad = jdbc.queryForObject(
                 "SELECT COUNT(*) FROM Ciudad WHERE id = ?",
                 Integer.class, ciudadId
@@ -89,7 +86,6 @@ public class VehiculoRestController {
                 ));
             }
 
-            // 3) Evitar duplicado de placa para ese dueño (opcional pero recomendable)
             Integer duplicado = jdbc.queryForObject("""
                 SELECT COUNT(*) FROM Vehiculo
                  WHERE placa = ? AND Ucond_idcond = ? AND Ucond_idusuario = ?
@@ -104,13 +100,11 @@ public class VehiculoRestController {
                 ));
             }
 
-            // 4) Insertar (ID lo asigna el trigger)
             repo.insertarVehiculo(
                 tipo, marca, modelo, color, placa, capacidad,
                 ciudadId, ucondIdcond, ucondIdusuario
             );
 
-            // 5) Recuperar el ID recién creado (por placa + dueño; el más reciente)
             Integer vehiculoId = jdbc.queryForObject("""
                 SELECT id FROM Vehiculo
                  WHERE placa = ? AND Ucond_idcond = ? AND Ucond_idusuario = ?

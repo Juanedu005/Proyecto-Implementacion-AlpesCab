@@ -15,16 +15,21 @@ import uniandes.edu.co.proyecto.modelo.UserviciosPK;
 
 public interface UserviciosRepository extends JpaRepository<Uservicios, UserviciosPK> {
 
-    /* ===== SELECTS ===== */
     @Query(value = "SELECT * FROM USERVICIOS", nativeQuery = true)
     Collection<Uservicios> darUservicios();
 
     @Query(value = "SELECT * FROM USERVICIOS WHERE id_usuario = :id_usuario AND id_servicios = :id_servicios", nativeQuery = true)
     Optional<Uservicios> darUservicio(@Param("id_usuario") int idUsuario,
                                       @Param("id_servicios") int idServicios);
+    
+    @Query(value = """
+    SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
+      FROM USERVICIOS
+     WHERE ID_USUARIO = :userId
+       AND FECHA_VENCIMIENTO >= TRUNC(SYSDATE)
+    """, nativeQuery = true)
+    int hasValidPayment(@Param("userId") Integer userId);
 
-    /* ===== INSERT ===== */
-    // Genera id_servicios con la secuencia; id_usuario viene de USUARIO (FK existente)
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Transactional
     @Query(value = """
@@ -33,11 +38,10 @@ public interface UserviciosRepository extends JpaRepository<Uservicios, Uservici
         """, nativeQuery = true)
     void insertarUservicio(@Param("id_usuario") Integer idUsuario,
                            @Param("nombre_tc") String nombreTc,
-                           @Param("numero_tc") Integer numeroTc,
+                           @Param("numero_tc") Long numeroTc,
                            @Param("fecha_vencimiento") Date fechaVencimiento,
                            @Param("cv") Integer cv);
 
-    /* ===== UPDATE ===== */
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Transactional
     @Query(value = """
@@ -52,14 +56,24 @@ public interface UserviciosRepository extends JpaRepository<Uservicios, Uservici
     void actualizarUservicio(@Param("id_usuario") Integer idUsuario,
                              @Param("id_servicios") Integer idServicios,
                              @Param("nombre_tc") String nombreTc,
-                             @Param("numero_tc") Integer numeroTc,
+                             @Param("numero_tc") Long numeroTc,
                              @Param("fecha_vencimiento") Date fechaVencimiento,
                              @Param("cv") Integer cv);
 
-    /* ===== DELETE ===== */
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Transactional
     @Query(value = "DELETE FROM USERVICIOS WHERE id_usuario = :id_usuario AND id_servicios = :id_servicios", nativeQuery = true)
     void eliminarUservicio(@Param("id_usuario") Integer idUsuario,
                            @Param("id_servicios") Integer idServicios);
+
+    @Query(value = """
+    SELECT u.*
+    FROM Uservicios u
+    WHERE u.id_usuario = :idUsuario
+    AND u.fecha_vencimiento >= TRUNC(SYSDATE)
+    """, nativeQuery = true)
+    Optional<Uservicios> encontrarMedioPagoVigente(Integer idUsuario);
+                    
+
+    
 }

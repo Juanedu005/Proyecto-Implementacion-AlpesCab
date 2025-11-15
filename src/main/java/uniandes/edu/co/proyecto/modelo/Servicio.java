@@ -2,12 +2,14 @@ package uniandes.edu.co.proyecto.modelo;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity
@@ -15,21 +17,30 @@ import jakarta.persistence.Table;
 public class Servicio {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(
+        name = "servicio_seq",
+        sequenceName = "SERVICIO_SEQ", 
+        allocationSize = 1 
+    )
+    @GeneratedValue(
+        strategy = GenerationType.SEQUENCE,
+        generator = "servicio_seq"
+    )
     private Integer id;
 
     private Integer tarifa_fija;
     private Integer distancia_recorrida;
-    private LocalDateTime hora_incio;
+
+    @Column(name = "HORA_INICIO")
+    private LocalDateTime hora_inicio;
+
+    @Column(name = "HORA_FIN")
     private LocalDateTime hora_fin;
 
     @OneToOne
     @JoinColumn(name = "P_Punto_id", referencedColumnName = "Punto_id")
     private Punto P_Punto_id;
 
-    // Si quieres la relación inversa hacia Uservicios, puedes agregar:
-    // @OneToMany(mappedBy = "servicio")
-    // private List<Uservicios> uservicios;
 
     public Servicio() { }
 
@@ -38,7 +49,7 @@ public class Servicio {
         this.id = id;
         this.tarifa_fija = tarifa_fija;
         this.distancia_recorrida = distancia_recorrida;
-        this.hora_incio = hora_incio;
+        this.hora_inicio = hora_incio;
         this.hora_fin = hora_fin;
         this.P_Punto_id = p_Punto_id;
     }
@@ -68,11 +79,11 @@ public class Servicio {
     }
 
     public LocalDateTime getHora_incio() {
-        return hora_incio;
+        return hora_inicio;
     }
 
     public void setHora_incio(LocalDateTime hora_incio) {
-        this.hora_incio = hora_incio;
+        this.hora_inicio = hora_incio;
     }
 
     public LocalDateTime getHora_fin() {

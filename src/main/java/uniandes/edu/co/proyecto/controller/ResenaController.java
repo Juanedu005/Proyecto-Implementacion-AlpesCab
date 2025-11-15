@@ -31,20 +31,17 @@ public class ResenaController {
 
     @PostMapping("/resenas/new/save")
     public String resenaGuardar(@ModelAttribute Resena resena) {
-        // FK compuesta a USERVICIOS
         Integer userIdUsuario = (resena.getUservicios() != null) ? resena.getUservicios().getPk().getId_usuario()   : null;
         Integer userIdSer     = (resena.getUservicios() != null) ? resena.getUservicios().getPk().getId_servicios() : null;
 
-        // FK compuesta a UCONDUCTOR
         Integer ucondIdCond   = (resena.getUconductor() != null) ? resena.getUconductor().getPk().getId_conductor() : null;
         Integer ucondIdUsu    = (resena.getUconductor() != null) ? resena.getUconductor().getPk().getId_usuario()   : null;
 
-        // IMPORTANTE: tu tabla RESENA tiene NOT NULL en las 4 columnas anteriores.
         resenaRepository.insertarResena(
-            userIdUsuario,  // User_idusuario
-            ucondIdUsu,     // Ucond_idusuario  (también parte de la PK)
-            ucondIdCond,    // Ucond_idcond
-            userIdSer,      // User_idser
+            userIdUsuario,  
+            ucondIdUsu,  
+            ucondIdCond,  
+            userIdSer,  
             resena.getComentario(),
             resena.getPuntuacion()
         );

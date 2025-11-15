@@ -20,25 +20,25 @@ public class UserviciosController {
     @Autowired
     private UserviciosRepository userviciosRepository;
 
-    /* ===== LISTAR ===== */
+    
     @GetMapping("/uservicios")
     public String uservicios(Model model) {
         model.addAttribute("uservicios", userviciosRepository.darUservicios());
-        return "uservicios"; // ← nombre de la vista (no model.toString)
+        return "uservicios"; 
     }
 
-    /* ===== FORM NUEVO ===== */
+   
     @GetMapping("/uservicios/new")
     public String uservicioForm(Model model) {
         model.addAttribute("uservicio", new Uservicios());
         return "uservicioNuevo";
     }
 
-    /* ===== GUARDAR NUEVO ===== */
+    
     @PostMapping("/uservicios/new/save")
     public String uservicioGuardar(@ModelAttribute Uservicios uservicio) {
 
-        // Solo pasamos id_usuario (id_servicios se genera con la secuencia)
+
         Integer idUsuario = (uservicio.getPk() != null) ? uservicio.getPk().getId_usuario() : null;
 
         userviciosRepository.insertarUservicio(
@@ -52,7 +52,7 @@ public class UserviciosController {
         return "redirect:/uservicios";
     }
 
-    /* ===== FORM EDITAR ===== */
+ 
     @GetMapping("/uservicios/{id_servicios}/{id_usuario}/edit")
     public String uservicioEditarForm(@PathVariable("id_servicios") int idServicios,
                                       @PathVariable("id_usuario") int idUsuario,
@@ -68,7 +68,7 @@ public class UserviciosController {
         }
     }
 
-    /* ===== GUARDAR EDICIÓN ===== */
+
     @PostMapping("/uservicios/{id_servicios}/{id_usuario}/edit/save")
     public String uservicioEditarGuardar(@PathVariable("id_servicios") int idServicios,
                                          @PathVariable("id_usuario") int idUsuario,
@@ -86,7 +86,7 @@ public class UserviciosController {
         return "redirect:/uservicios";
     }
 
-    /* ===== ELIMINAR ===== */
+   
     @GetMapping("/uservicios/{id_servicios}/{id_usuario}/delete")
     public String uservicioEliminar(@PathVariable("id_servicios") int idServicios,
                                     @PathVariable("id_usuario") int idUsuario) {

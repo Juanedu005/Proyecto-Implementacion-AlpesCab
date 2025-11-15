@@ -13,15 +13,14 @@ import uniandes.edu.co.proyecto.modelo.Punto;
 
 public interface PuntoRepository extends JpaRepository<Punto, Integer> {
 
-    // LISTAR
+    
     @Query(value = "SELECT * FROM PUNTO", nativeQuery = true)
     Collection<Punto> darPuntos();
 
-    // OBTENER POR PK
     @Query(value = "SELECT * FROM PUNTO WHERE PUNTO_ID = :puntoId", nativeQuery = true)
     Optional<Punto> darPunto(@Param("puntoId") int puntoId);
 
-    // INSERTAR (usa tu secuencia PUNTO_PUNTO_ID_SEQ)
+   
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Transactional
     @Query(value = """
@@ -34,7 +33,7 @@ public interface PuntoRepository extends JpaRepository<Punto, Integer> {
                        @Param("servicioId") Integer servicioId,
                        @Param("ciudadId") Integer ciudadId);
 
-    // ACTUALIZAR
+
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Transactional
     @Query(value = """
@@ -53,7 +52,7 @@ public interface PuntoRepository extends JpaRepository<Punto, Integer> {
                          @Param("servicioId") Integer servicioId,
                          @Param("ciudadId") Integer ciudadId);
 
-    // ELIMINAR
+ 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Transactional
     @Query(value = "DELETE FROM PUNTO WHERE PUNTO_ID = :puntoId", nativeQuery = true)

@@ -19,7 +19,6 @@ public class FranjaRestController {
     @Autowired
     private FranjaRepository repo;
 
-    // Usamos JdbcTemplate para validaciones rápidas contra la BD (dueño del vehículo / traslapes)
     @Autowired
     private JdbcTemplate jdbc;
 
@@ -36,7 +35,6 @@ public class FranjaRestController {
     @PostMapping
     public ResponseEntity<?> crear(@RequestBody Map<String, Object> body) {
         try {
-            // 1) Parseo seguro de campos
             String horaInicioStr = (String) body.get("horaInicio");
             String horaFinStr    = (String) body.get("horaFin");
             Integer ocupado      = getInt(body, "ocupado", "isOcupado");
@@ -68,8 +66,7 @@ public class FranjaRestController {
                 ));
             }
 
-            // 2) Derivar el dueño desde el Vehículo (evita ORA-02291 por par mal enviado)
-            //    SELECT Ucond_idcond, Ucond_idusuario FROM Vehiculo WHERE id = ?
+
             Map<String, Object> dueno;
             try {
                 dueno = jdbc.queryForMap(
@@ -85,8 +82,7 @@ public class FranjaRestController {
             Integer ucondIdcond    = ((Number) dueno.get("IDCOND")).intValue();
             Integer ucondIdusuario = ((Number) dueno.get("IDUSU")).intValue();
 
-            // 3) (Opcional pero recomendado) Validar traslapes por CONDUCTOR
-            //    NOT (nuevoFin <= inicioExist OR nuevoInicio >= finExist)
+
             Integer solapes = jdbc.queryForObject("""
                 SELECT COUNT(*) FROM Franja f
                  WHERE f.Ucond_idcond = ?
@@ -105,11 +101,9 @@ public class FranjaRestController {
                 ));
             }
 
-            // 4) Insertar (ID_FRANJA lo asigna el trigger)
+
             repo.insertarFranja(horaInicio, horaFin, ocupado, vehiculoId, ucondIdcond, ucondIdusuario);
 
-            // 5) (Opcional) recuperar el último ID de la franja insertada por hora/vehículo/usuario
-            //    Si quieres devolver el id, puedes buscar por igualdad exacta de todos los campos:
             Integer idFranja = null;
             try {
                 idFranja = jdbc.queryForObject("""
@@ -147,7 +141,6 @@ public class FranjaRestController {
                 "detalle", nfe.getMessage()
             ));
         } catch (org.springframework.dao.DataIntegrityViolationException dive) {
-            // Mapea errores FK/UNIQUE a 400 con mensaje claro
             String msg = dive.getMostSpecificCause() != null ? dive.getMostSpecificCause().getMessage() : dive.getMessage();
             return ResponseEntity.badRequest().body(Map.of(
                 "error", "Violación de integridad",

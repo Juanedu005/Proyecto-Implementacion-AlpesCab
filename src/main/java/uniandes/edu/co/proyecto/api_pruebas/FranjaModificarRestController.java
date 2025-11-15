@@ -151,7 +151,6 @@ public class FranjaModificarRestController {
                     ucondIdusuario
             );
 
-            // 5) Responder OK
             return ResponseEntity.ok(Map.of(
                     "mensaje", "Franja modificada exitosamente",
                     "idFranja", idFranja,

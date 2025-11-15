@@ -19,7 +19,7 @@ public interface CiudadRepository extends JpaRepository<Ciudad, Integer> {
     @Query(value = "SELECT * FROM CIUDAD WHERE ID = :id", nativeQuery = true)
     Optional<Ciudad> darCiudad(@Param("id") int id);
 
-    // Si tu PK se genera con secuencia en Oracle:
+
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Transactional
     @Query(value = "INSERT INTO CIUDAD (ID, NOMBRE) VALUES (CIUDAD_ID_SEQ.NEXTVAL, :nombre)", nativeQuery = true)

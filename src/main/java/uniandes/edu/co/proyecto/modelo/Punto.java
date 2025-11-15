@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity
@@ -14,15 +15,20 @@ import jakarta.persistence.Table;
 public class Punto {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer Punto_id; 
+    @SequenceGenerator(
+        name = "PUNTO_SEQ",
+        sequenceName = "PUNTO_PUNTO_ID_SEQ",
+        allocationSize = 1
+    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PUNTO_SEQ")
+    private Integer Punto_id;
 
     private String direccion; 
     private String latitud; 
     private String longitud; 
 
-    @OneToOne
-    @JoinColumn(name = "Servicio_id", referencedColumnName = "id")
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "Servicio_id", referencedColumnName = "id", nullable = true)
     private Servicio Servicio_id;
 
     @ManyToOne

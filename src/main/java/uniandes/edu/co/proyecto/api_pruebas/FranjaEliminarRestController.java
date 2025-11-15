@@ -22,7 +22,6 @@ public class FranjaEliminarRestController {
     @DeleteMapping("/{idFranja}")
     public ResponseEntity<?> eliminar(@PathVariable("idFranja") Integer idFranja) {
         try {
-            // ¿existe?
             Integer existe = jdbc.queryForObject(
                 "SELECT COUNT(*) FROM FRANJA WHERE ID_FRANJA = ?",
                 Integer.class, idFranja

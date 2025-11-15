@@ -19,16 +19,12 @@ public interface UconductorRepository extends JpaRepository<Uconductor, Uconduct
     @Query(value = "SELECT * FROM Uconductor WHERE id_conductor = :id_conductor AND id_usuario = :id_usuario", nativeQuery = true)
     Uconductor darUconductor(@Param("id_conductor") int id_conductor, @Param("id_usuario") int id_usuario);
 
-    /* INSERT coherente con trigger:
-       - Si :id_conductor es NULL -> el trigger autogenera
-       - :id_usuario debe existir en USUARIO
-    */
+   
     @Modifying
     @Transactional
     @Query(value = "INSERT INTO Uconductor (id_conductor, id_usuario) VALUES (:id_conductor, :id_usuario)", nativeQuery = true)
     void insertarUconductor(@Param("id_conductor") Integer id_conductor, @Param("id_usuario") Integer id_usuario);
 
-    /* UPDATE no-op para mantener contrato (no hay campos que actualizar en práctica) */
     @Modifying
     @Transactional
     @Query(value = "UPDATE Uconductor SET id_usuario = id_usuario WHERE id_conductor = :id_conductor AND id_usuario = :id_usuario", nativeQuery = true)
@@ -39,7 +35,7 @@ public interface UconductorRepository extends JpaRepository<Uconductor, Uconduct
     @Query(value = "DELETE FROM Uconductor WHERE id_conductor = :id_conductor AND id_usuario = :id_usuario", nativeQuery = true)
     void eliminarUconductor(@Param("id_conductor") int id_conductor, @Param("id_usuario") int id_usuario);
 
-    // ========================= RFC2 =========================
+    //RFC2
     @Query(value =
         "WITH svc_asig AS ( " +
         "  SELECT s.id, f.Ucond_idcond, f.Ucond_idusuario " +
@@ -59,7 +55,7 @@ public interface UconductorRepository extends JpaRepository<Uconductor, Uconduct
         nativeQuery = true)
     Collection<Object[]> rfc2Top20Conductores();
 
-    // ========================= RFC3 =========================
+    //rfc3
     @Query(value =
         "WITH svc_asig AS ( " +
         "  SELECT s.id, f.Vehiculo_id " +

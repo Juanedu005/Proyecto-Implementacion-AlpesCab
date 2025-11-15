@@ -29,7 +29,7 @@ public class Vehiculo {
     @JoinColumn(name = "Ciudad_id", referencedColumnName = "id")
     private Ciudad ciudad;
 
-    /* Asociación compuesta correcta a Uconductor */
+
     @ManyToOne
     @JoinColumns({
         @JoinColumn(name = "Ucond_idcond",    referencedColumnName = "id_conductor"),

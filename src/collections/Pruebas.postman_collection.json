@@ -1,0 +1,312 @@
+{
+	"info": {
+		"_postman_id": "99a36bc4-f4a3-48a9-bcb2-cd43fe7077d9",
+		"name": "SisTransNuevo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "47436459",
+		"_collection_link": "https://v-ruedac-1679516.postman.co/workspace/ViviendaUniversitaria~533f2de5-cd84-4566-8350-76b01a6e3dc4/collection/47436459-99a36bc4-f4a3-48a9-bcb2-cd43fe7077d9?action=share&source=collection_link&creator=47436459"
+	},
+	"item": [
+		{
+			"name": "RF1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"ciudadId\", pm.response.json().id);",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"nombre\": \"Bogotá\" }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/ciudades",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"ciudades"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RF2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const d = pm.response.json();",
+							"pm.collectionVariables.set(\"usuarioId\", d.id);",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nombre\": \"Ana\",\n  \"email\": \"ana@example.com\",\n  \"cedula\": \"111\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/usuarios",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"usuarios"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RF3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const d = pm.response.json();",
+							"pm.collectionVariables.set(\"idConductor\", d.id_conductor || d.idConductor);",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"idUsuario\": {{usuarioId}} }\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/conductores",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"conductores"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RF4",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const d = pm.response.json();",
+							"pm.collectionVariables.set('vehiculoId', d.id);"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"tipo\": \"carro\",\n  \"marca\": \"Toyota\",\n  \"modelo\": \"Corolla\",\n  \"color\": \"Rojo\",\n  \"placa\": \"ABE123\",\n  \"capacidad\": 4,\n  \"ciudadId\": 5,\n  \"ucondIdcond\": 8,\n  \"ucondIdusuario\": 5\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/vehiculos",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"vehiculos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RF5",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let d = {};",
+							"try { d = pm.response.json(); } catch(e) {}",
+							"// según tu respuesta; usa la clave correcta:",
+							"pm.collectionVariables.set(\"idFranja\", d.idFranja || d.id || d.ID_FRANJA);",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"horaInicio\": \"2025-12-04T08:00:00\",\n  \"horaFin\": \"2025-12-04T12:00:00\",\n  \"ocupado\": 0,\n  \"vehiculoId\": {{vehiculoId}}\n}\n\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/franjas",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"franjas"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RF6",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"horaInicio\": \"2025-11-05T09:00:00\",\n  \"horaFin\": \"2025-11-05T11:30:00\",\n  \"ocupado\": 0,\n  \"vehiculoId\": 7\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/franjas/{{idFranja}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"franjas",
+						"{{idFranja}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/franjas/{{idFranja}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"franjas",
+						"{{idFranja}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "vehiculoId",
+			"value": ""
+		},
+		{
+			"key": "ciudadId",
+			"value": ""
+		},
+		{
+			"key": "usuarioId",
+			"value": ""
+		},
+		{
+			"key": "idConductor",
+			"value": ""
+		},
+		{
+			"key": "idFranja",
+			"value": ""
+		}
+	]
+}

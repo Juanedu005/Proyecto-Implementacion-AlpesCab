@@ -20,7 +20,7 @@ public class VehiculoController {
     @GetMapping("/vehiculos")
     public String vehiculos(Model model) {
         model.addAttribute("vehiculos", vehiculoRepository.darVehiculos());
-        return "vehiculos"; // <- no model.toString()
+        return "vehiculos";
     }
 
     @GetMapping("/vehiculos/new")

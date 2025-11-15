@@ -17,17 +17,17 @@ public class Uservicios {
     private UserviciosPK pk;
 
     private String nombre_tc;
-    private Integer numero_tc;
+    private Long numero_tc;
     private Date fecha_vencimiento;
     private Integer cv;
 
-    // Parte de la PK: ID_USUARIO -> Usuario.ID
+  
     @MapsId("id_usuario")
     @ManyToOne(optional = false)
     @JoinColumn(name = "ID_USUARIO", referencedColumnName = "ID")
     private Usuario usuario;
 
-    // Parte de la PK: ID_SERVICIOS -> Servicio.ID
+
     @MapsId("id_servicios")
     @ManyToOne(optional = false)
     @JoinColumn(name = "ID_SERVICIOS", referencedColumnName = "ID")
@@ -35,7 +35,7 @@ public class Uservicios {
 
     public Uservicios() { }
 
-    public Uservicios(UserviciosPK pk, String nombre_tc, Integer numero_tc, Date fecha_vencimiento, Integer cv) {
+    public Uservicios(UserviciosPK pk, String nombre_tc, Long numero_tc, Date fecha_vencimiento, Integer cv) {
         this.pk = pk;
         this.nombre_tc = nombre_tc;
         this.numero_tc = numero_tc;
@@ -59,11 +59,11 @@ public class Uservicios {
         this.nombre_tc = nombre_tc;
     }
 
-    public Integer getNumero_tc() {
+    public Long getNumero_tc() {
         return numero_tc;
     }
 
-    public void setNumero_tc(Integer numero_tc) {
+    public void setNumero_tc(Long numero_tc) {
         this.numero_tc = numero_tc;
     }
 

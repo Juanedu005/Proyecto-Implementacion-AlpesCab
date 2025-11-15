@@ -59,4 +59,33 @@ public interface FranjaRepository extends JpaRepository<Franja, Integer> {
     @Transactional
     @Query(value = "DELETE FROM FRANJA WHERE ID_FRANJA = :id_franja", nativeQuery = true)
     void eliminarFranja(@Param("id_franja") int id_franja);
+
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Transactional
+    @Query(value = """
+        UPDATE FRANJA f
+          SET OCUPADO = 0
+        WHERE OCUPADO = 1
+          AND EXISTS (
+                SELECT 1
+                  FROM SERVICIO s
+                WHERE s.ID = :servicioId
+                  AND s.HORA_INICIO >= f.HORA_INICIO
+                  AND s.HORA_FIN    <= f.HORA_FIN
+          )
+        """, nativeQuery = true)
+    void liberarPorServicio(@Param("servicioId") Integer servicioId);
+
+
+    @Query(value = """
+        SELECT f.*
+        FROM Franja f
+        JOIN Vehiculo v ON f.Vehiculo_id = v.id
+        WHERE f.ocupado = 0
+          AND v.Ciudad_id = :idCiudad
+          AND :ahora BETWEEN f.hora_inicio AND f.hora_fin
+        FETCH FIRST 1 ROWS ONLY
+        """, nativeQuery = true)
+    Optional<Franja> encontrarFranjaDisponible(Integer idCiudad, LocalDateTime ahora);
 }

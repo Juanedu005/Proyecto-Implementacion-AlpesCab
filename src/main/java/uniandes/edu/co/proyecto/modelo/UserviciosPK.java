@@ -32,7 +32,7 @@ public class UserviciosPK implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof UserviciosPK)) return false;
-        UserviciosPK that = (UserviciosPK) o; // <- aquí estaba el typo
+        UserviciosPK that = (UserviciosPK) o;
         return Objects.equals(id_usuario, that.id_usuario)
             && Objects.equals(id_servicios, that.id_servicios);
     }

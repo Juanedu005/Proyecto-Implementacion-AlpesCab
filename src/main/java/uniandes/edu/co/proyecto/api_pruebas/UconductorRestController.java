@@ -20,12 +20,10 @@ public class UconductorRestController {
     @PostMapping
     public ResponseEntity<?> crear(@RequestBody Map<String, Object> body) {
         try {
-            // JSON: { "idUsuario": 1 }
             Integer idUsuario = (body.get("idUsuario") instanceof Number)
                     ? ((Number) body.get("idUsuario")).intValue()
                     : null;
 
-            // Insert minimalista: trigger pone el ID_CONDUCTOR si va NULL
             repo.insertarUconductor(null, idUsuario);
 
             return ResponseEntity

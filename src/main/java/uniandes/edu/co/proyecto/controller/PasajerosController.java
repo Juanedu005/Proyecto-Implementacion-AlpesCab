@@ -19,7 +19,7 @@ public class PasajerosController {
     @GetMapping("/pasajeros")
     public String listar(Model model) {
         model.addAttribute("pasajeros", pasajerosRepository.darPasajeros());
-        return "pasajeros"; // nombre de la vista
+        return "pasajeros"; 
     }
 
     @GetMapping("/pasajeros/new")

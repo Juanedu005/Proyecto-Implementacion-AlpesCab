@@ -19,7 +19,6 @@ public interface MercanciaRepository extends JpaRepository<Mercancia, Integer> {
     @Query(value = "SELECT * FROM MERCANCIA WHERE SERVICIO_ID = :id", nativeQuery = true)
     Optional<Mercancia> darMercancia(@Param("id") int servicioId);
 
-    // IMPORTANTE: No hay secuencia para MERCANCIA. Se debe pasar SERVICIO_ID existente.
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Transactional
     @Query(value = "INSERT INTO MERCANCIA (SERVICIO_ID, ELEMENTORECOGIDO) VALUES (:id, :elem)", nativeQuery = true)

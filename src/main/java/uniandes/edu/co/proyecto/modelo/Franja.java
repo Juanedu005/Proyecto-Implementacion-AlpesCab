@@ -9,7 +9,7 @@ public class Franja {
 
     @Id
     @Column(name = "ID_FRANJA")
-    private Integer idFranja; // <- SIN @GeneratedValue (lo asigna el trigger)
+    private Integer idFranja; 
 
     @Column(name = "HORA_INICIO")
     private LocalDateTime horaInicio;

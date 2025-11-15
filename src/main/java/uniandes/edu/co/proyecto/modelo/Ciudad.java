@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 @Table(name = "CIUDAD")
 @SequenceGenerator(
     name = "CIUDAD_SEQ",
-    sequenceName = "CIUDAD_ID_SEQ", // tu script crea Ciudad_id_SEQ -> Oracle lo guarda como CIUDAD_ID_SEQ
+    sequenceName = "CIUDAD_ID_SEQ", 
     allocationSize = 1
 )
 public class Ciudad {

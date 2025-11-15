@@ -8,17 +8,16 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "RESENA") // opcional, pero suele ir en mayúsculas en Oracle
+@Table(name = "RESENA") 
 public class Resena {
 
     @EmbeddedId
-    private ResenaPK pk;  // Asegúrate que pk tenga las columnas: Ucond_idcond, Ucond_idusuario, User_idusuario, User_idser
+    private ResenaPK pk; 
 
     private String comentario;
     private Integer puntuacion;
 
-    // === RELACIÓN A Uconductor (usa MISMAS columnas que están en la PK) ===
-    // → marcamos solo-lectura para evitar la duplicación de columnas
+   
     @ManyToOne(optional = false)
     @JoinColumns({
         @JoinColumn(name = "UCOND_IDCOND",    referencedColumnName = "ID_CONDUCTOR", insertable = false, updatable = false),
@@ -26,13 +25,13 @@ public class Resena {
     })
     private Uconductor uconductor;
 
-    // === RELACIÓN A Uservicios (también comparte columnas con la PK) ===
+
     @ManyToOne(optional = false)
     @JoinColumns({
         @JoinColumn(name = "USER_IDUSUARIO", referencedColumnName = "ID_USUARIO",    insertable = false, updatable = false),
         @JoinColumn(name = "USER_IDSER",     referencedColumnName = "ID_SERVICIOS",  insertable = false, updatable = false)
     })
-    private Uservicios uservicios; // OJO: mantén el mismo nombre en campo y setters/getters
+    private Uservicios uservicios; 
 
     public Resena() { }
 
@@ -42,7 +41,7 @@ public class Resena {
         this.comentario = comentario;
         this.puntuacion = puntuacion;
         this.uconductor = uconductor;
-        this.uservicios = uservicios; // <-- asegúrate que el nombre del campo sea "uservicios" o cambia aquí a "uservicios"
+        this.uservicios = uservicios; 
     }
 
     public ResenaPK getPk() { return pk; }

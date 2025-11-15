@@ -24,39 +24,34 @@ public class DomicilioController {
     @Autowired
     private ServicioRepository servicioRepository;
 
-    // LISTAR
+
     @GetMapping("/domicilios")
     public String domicilios(Model model){
         model.addAttribute("domicilios", domicilioRepository.findAll());
-        return "domicilios"; // nombre de la vista
+        return "domicilios"; 
     }
 
-    // FORM CREAR
     @GetMapping("/domicilios/new")
     public String domicilioForm(Model model){
         model.addAttribute("domicilio", new Domicilio());
-        // si el formulario necesita elegir el Servicio, pásale también la lista de servicios:
         model.addAttribute("servicios", servicioRepository.findAll());
         return "domicilioNuevo";
     }
 
-    // GUARDAR NUEVO
     @PostMapping("/domicilios/new/save")
     public String domicilioGuardar(@ModelAttribute Domicilio domicilio){
-        // Con @MapsId, debemos setear la relación Servicio antes del save
-        Integer servicioId = domicilio.getServicioId(); // viene del form (hidden o select)
+        Integer servicioId = domicilio.getServicioId(); 
         if (servicioId == null) {
-            // si no viene, redirige o muestra error según tu UX
             return "redirect:/domicilios";
         }
         Servicio s = servicioRepository.findById(servicioId)
                         .orElseThrow(() -> new IllegalArgumentException("Servicio no existe: " + servicioId));
-        domicilio.setServicio(s); // @MapsId tomará s.getId() como PK
+        domicilio.setServicio(s); 
         domicilioRepository.save(domicilio);
         return "redirect:/domicilios";
     }
 
-    // FORM EDITAR
+   
     @GetMapping("/domicilios/{servicioId}/edit")
     public String domicilioEditarForm(@PathVariable("servicioId") int servicioId, Model model){
         Optional<Domicilio> domOpt = domicilioRepository.findById(servicioId);
@@ -69,27 +64,25 @@ public class DomicilioController {
         }
     }
 
-    // GUARDAR EDICIÓN
+
     @PostMapping("/domicilios/{servicioId}/edit/save")
     public String domicilioEditarGuardar(@PathVariable("servicioId") int servicioId, @ModelAttribute Domicilio form){
         Domicilio existente = domicilioRepository.findById(servicioId)
                                  .orElseThrow(() -> new IllegalArgumentException("Domicilio no existe: " + servicioId));
-        // actualiza campos editables
+
         existente.setNombreRestaurante(form.getNombreRestaurante());
         existente.setOrden(form.getOrden());
 
-        // si permites cambiar el Servicio (cambiar PK), debes cargar el nuevo servicio y setearlo:
         if (form.getServicioId() != null && form.getServicioId() != servicioId) {
             Servicio nuevo = servicioRepository.findById(form.getServicioId())
                                .orElseThrow(() -> new IllegalArgumentException("Servicio no existe: " + form.getServicioId()));
-            existente.setServicio(nuevo); // @MapsId: la PK cambiaría al nuevo ID
+            existente.setServicio(nuevo); 
         }
 
         domicilioRepository.save(existente);
         return "redirect:/domicilios";
     }
 
-    // ELIMINAR
     @GetMapping("/domicilios/{servicioId}/delete")
     public String domicilioEliminar(@PathVariable("servicioId") int servicioId){
         domicilioRepository.deleteById(servicioId);

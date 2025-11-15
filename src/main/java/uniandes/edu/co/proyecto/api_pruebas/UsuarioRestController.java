@@ -21,7 +21,6 @@ public class UsuarioRestController {
     @PostMapping
     public ResponseEntity<?> crear(@RequestBody CrearUsuarioRequest req) {
         try {
-            // Validaciones simples
             if (req == null
                 || req.getNombre() == null || req.getNombre().trim().isEmpty()
                 || req.getEmail() == null || req.getEmail().trim().isEmpty()
@@ -51,7 +50,6 @@ public class UsuarioRestController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // DTO local o en paquete dto/
     public static class CrearUsuarioRequest {
         private String nombre;
         private String email;

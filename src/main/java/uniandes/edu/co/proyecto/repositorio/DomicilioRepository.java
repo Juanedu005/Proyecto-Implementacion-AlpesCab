@@ -12,9 +12,9 @@ import uniandes.edu.co.proyecto.modelo.Domicilio;
 
 public interface DomicilioRepository extends JpaRepository<Domicilio, Integer> {
 
-    Optional<Domicilio> findById(Integer servicioId); // ya viene de JpaRepository
+    Optional<Domicilio> findById(Integer servicioId); 
 
-    // UPDATE (opcional): usa nombres de PROPIEDAD (no nombres de columna)
+ 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Transactional
     @Query("UPDATE Domicilio d SET d.nombreRestaurante = :nombre, d.orden = :orden WHERE d.servicioId = :id")

@@ -21,18 +21,17 @@ public class UconductorController {
     @GetMapping("/uconductores")
     public String uconductores(Model model) {
         model.addAttribute("uconductores", uconductorRepository.darUconductors());
-        return "uconductores"; // antes: model.toString()
+        return "uconductores"; 
     }
 
     @GetMapping("/uconductores/new")
     public String uconductorForm(Model model) {
-        model.addAttribute("uconductor", new Uconductor()); // antes: new UconductorController()
+        model.addAttribute("uconductor", new Uconductor()); 
         return "uconductorNuevo";
     }
 
     @PostMapping("/uconductores/new/save")
     public String uconductorGuardar(@ModelAttribute Uconductor uconductor) {
-        // Si dejas id_conductor = null, el TRIGGER lo autogenera
         Integer idConductor = (uconductor.getPk() != null) ? uconductor.getPk().getId_conductor() : null;
         Integer idUsuario   = (uconductor.getPk() != null) ? uconductor.getPk().getId_usuario()   : null;
 

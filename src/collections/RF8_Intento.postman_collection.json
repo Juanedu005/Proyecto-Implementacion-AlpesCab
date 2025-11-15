@@ -1,0 +1,100 @@
+{
+    "info": {
+      "_postman_id": "f0f1f1c1-7777-4444-8888-rf8-full-url",
+      "name": "ALPESCAB - RF8 (FULL URLs)",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+      {
+        "name": "RF8 - Solicitud EXITOSA",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"idUsuarioServicio\": 1,\n  \"tipoServicio\": \"PASAJEROS\",\n  \"nivelPasajero\": \"CONFORT\",\n  \"idCiudad\": 1,\n  \"idPuntoOrigen\": 10,\n  \"idPuntoDestino\": 11,\n  \"distanciaKm\": 5,\n  \"forzarError\": false\n}"
+          },
+          "url": "http://localhost:8080/api/rf8/solicitar"
+        },
+        "response": []
+      },
+      {
+        "name": "RF8 - Rollback forzado (forzarError = true)",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"idUsuarioServicio\": 1,\n  \"tipoServicio\": \"PASAJEROS\",\n  \"nivelPasajero\": \"CONFORT\",\n  \"idCiudad\": 1,\n  \"idPuntoOrigen\": 10,\n  \"idPuntoDestino\": 11,\n  \"distanciaKm\": 5,\n  \"forzarError\": true\n}"
+          },
+          "url": "http://localhost:8080/api/rf8/solicitar"
+        },
+        "response": []
+      },
+      {
+        "name": "RF8 - Sin medio de pago (usuario sin tarjeta válida)",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"idUsuarioServicio\": 99,\n  \"tipoServicio\": \"PASAJEROS\",\n  \"nivelPasajero\": \"ESTANDAR\",\n  \"idCiudad\": 1,\n  \"idPuntoOrigen\": 10,\n  \"idPuntoDestino\": 11,\n  \"distanciaKm\": 3,\n  \"forzarError\": false\n}"
+          },
+          "url": "http://localhost:8080/api/rf8/solicitar"
+        },
+        "response": []
+      },
+      {
+        "name": "RF8 - Sin franja disponible (todas ocupadas)",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"idUsuarioServicio\": 1,\n  \"tipoServicio\": \"PASAJEROS\",\n  \"nivelPasajero\": \"ESTANDAR\",\n  \"idCiudad\": 1,\n  \"idPuntoOrigen\": 10,\n  \"idPuntoDestino\": 11,\n  \"distanciaKm\": 4,\n  \"forzarError\": false\n}"
+          },
+          "url": "http://localhost:8080/api/rf8/solicitar"
+        },
+        "response": []
+      },
+      {
+        "name": "RF8 - Punto destino INEXISTENTE",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"idUsuarioServicio\": 1,\n  \"tipoServicio\": \"PASAJEROS\",\n  \"nivelPasajero\": \"CONFORT\",\n  \"idCiudad\": 1,\n  \"idPuntoOrigen\": 10,\n  \"idPuntoDestino\": 999999,\n  \"distanciaKm\": 5,\n  \"forzarError\": false\n}"
+          },
+          "url": "http://localhost:8080/api/rf8/solicitar"
+        },
+        "response": []
+      }
+    ]
+  }
+  

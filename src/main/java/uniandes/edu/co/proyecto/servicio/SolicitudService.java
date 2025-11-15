@@ -3,10 +3,14 @@ package uniandes.edu.co.proyecto.servicio;
 
 import java.time.LocalDateTime;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import uniandes.edu.co.proyecto.modelo.Servicio;
+import uniandes.edu.co.proyecto.dto.SolicitudDTO;
 import uniandes.edu.co.proyecto.modelo.Punto;
 import uniandes.edu.co.proyecto.modelo.Uservicios;
 import uniandes.edu.co.proyecto.modelo.UserviciosPK;
@@ -34,16 +38,9 @@ public class SolicitudService {
         this.userviciosRepo = userviciosRepo;
     }
 
-    /**
-     * RF8: crea un servicio y relaciona al usuario con el servicio dentro de una
-     * única transacción. Si ocurre cualquier excepción, se hace rollback automático.
-     *
-     * @param usuarioId  id del usuario que solicita
-     * @param puntoOrigenId id del punto (o se podría crear un nuevo punto)
-     * @param tarifaFija tarifa calculada previamente
-     * @param distancia  distancia recorrida (estimada)
-     * @param forzarError si es true, se lanza un error para verificar rollback
-     */
+    
+
+    //RF8
     @Transactional(rollbackFor = Exception.class)
     public Servicio solicitarServicioRF8(
             int usuarioId,
@@ -52,25 +49,23 @@ public class SolicitudService {
             int distancia,
             boolean forzarError) {
 
-        // 1) validar usuario
+  
         Usuario usuario = usuarioRepo.findById(usuarioId)
             .orElseThrow(() -> new IllegalArgumentException("Usuario no existe: " + usuarioId));
 
-        // 2) leer/validar punto
+     
         Punto origen = puntoRepo.findById(puntoOrigenId)
             .orElseThrow(() -> new IllegalArgumentException("Punto no existe: " + puntoOrigenId));
 
-        // 3) crear servicio (usamos JPA save para obtener el id)
         Servicio s = new Servicio();
         s.setTarifa_fija(tarifaFija);
         s.setDistancia_recorrida(distancia);
         s.setHora_incio(LocalDateTime.now());
-        s.setHora_fin(null); // aún no finaliza
+        s.setHora_fin(null); 
         s.setP_Punto_id(origen);
 
-        s = servicioRepo.save(s); // id poblado
+        s = servicioRepo.save(s);
 
-        // 4) crear enlace en USERVICIOS (histórico/medio de pago)
         Uservicios u = new Uservicios();
         UserviciosPK pk = new UserviciosPK();
         pk.setId_usuario(usuario.getId());
@@ -78,14 +73,14 @@ public class SolicitudService {
         u.setPk(pk);
         u.setUsuario(usuario);
         u.setServicio(s);
-        // NOTA: si tu USERVICIOS tiene columnas de tarjeta, setéalas aquí desde parámetros/DTO
         userviciosRepo.save(u);
 
         if (forzarError) {
-            // simula un error para comprobar que TODO revierte
             throw new RuntimeException("Error forzado para probar rollback RF8");
         }
 
-        return s; // commit implícito al salir sin excepciones
+        return s; 
     }
+
+
 }

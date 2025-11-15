@@ -6,12 +6,12 @@ import jakarta.persistence.*;
 @Table(name = "MERCANCIA")
 public class Mercancia {
 
-    // PK real de la tabla
+
     @Id
     @Column(name = "SERVICIO_ID", nullable = false)
     private Integer servicioId;
 
-    // Relación 1:1 con Servicio usando la misma PK
+    
     @OneToOne(optional = false)
     @MapsId
     @JoinColumn(name = "SERVICIO_ID", referencedColumnName = "ID")
@@ -23,7 +23,7 @@ public class Mercancia {
     public Mercancia() {}
 
     public Mercancia(Servicio servicio, String elementoRecogido) {
-        this.servicio = servicio;               // @MapsId tomará servicio.getId() como PK
+        this.servicio = servicio;  
         this.elementoRecogido = elementoRecogido;
     }
 

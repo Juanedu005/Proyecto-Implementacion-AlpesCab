@@ -6,12 +6,12 @@ import jakarta.persistence.*;
 @Table(name = "DOMICILIO")
 public class Domicilio {
 
-    // PK real de la tabla
+ 
     @Id
     @Column(name = "SERVICIO_ID", nullable = false)
     private Integer servicioId;
 
-    // PK compartida con SERVICIO (usa el mismo valor de ID)
+
     @OneToOne(optional = false)
     @MapsId
     @JoinColumn(name = "SERVICIO_ID", referencedColumnName = "ID")
@@ -26,7 +26,7 @@ public class Domicilio {
     public Domicilio() {}
 
     public Domicilio(Servicio servicio, String nombreRestaurante, String orden) {
-        this.servicio = servicio;         // @MapsId tomará servicio.getId() como PK
+        this.servicio = servicio; 
         this.nombreRestaurante = nombreRestaurante;
         this.orden = orden;
     }

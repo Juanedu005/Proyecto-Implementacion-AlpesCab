@@ -27,10 +27,9 @@ public class CiudadRestController {
             String nombre = req.getNombre().trim();
 
 
-            Ciudad creada = repo.save(new Ciudad(null, nombre)); // usa el @GeneratedValue (secuencia)
+            Ciudad creada = repo.save(new Ciudad(null, nombre)); 
             return ResponseEntity.created(URI.create("/api/ciudades/" + creada.getId())).body(creada);
         } catch (Exception e) {
-            // Para ver la causa exacta del error en la respuesta
             return ResponseEntity.internalServerError().body(Map.of("error", e.getClass().getSimpleName() + ": " + e.getMessage()));
         }
     }

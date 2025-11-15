@@ -14,16 +14,12 @@ import uniandes.edu.co.proyecto.modelo.Servicio;
 
 public interface ServicioRepository extends JpaRepository<Servicio, Integer> {
 
-    /* ================== LISTAR / OBTENER ================== */
-
     @Query(value = "SELECT * FROM Servicio", nativeQuery = true)
     Collection<Servicio> darServicios();
 
     @Query(value = "SELECT * FROM Servicio WHERE id = :id", nativeQuery = true)
     Servicio darServicio(@Param("id") Integer id);
 
-
-    /* ================== INSERT / UPDATE / DELETE ================== */
 
     @Modifying
     @Transactional
@@ -60,10 +56,7 @@ public interface ServicioRepository extends JpaRepository<Servicio, Integer> {
     void eliminarServicio(@Param("id") Integer id);
 
 
-    /* ================== RFC1: Historial por usuario/servicio ==================
-       Retorna el/los servicios asociados a un usuario por la tabla de asociación USERVICIOS.
-       (Respetando el nuevo modelo: la relación vive en USERVICIOS, no en SERVICIO)
-    */
+    //rfc1
     @Query(value =
         "SELECT s.* " +
         "  FROM Servicio s " +
@@ -76,12 +69,7 @@ public interface ServicioRepository extends JpaRepository<Servicio, Integer> {
                                            @Param("idServicio") int idServicio);
 
 
-    /* ================== RFC4: Utilización por ciudad y rango ==================
-       Ejemplo simple: devuelve conteos de servicios por ciudad y rango de fechas,
-       uniendo POR PUNTO (que tiene Ciudad_id y Servicio_id).
-       Devuelve filas con: ciudad_id, total_servicios
-       (Puedes ampliar el SELECT si necesitas más métricas)
-    */
+    //RFC4
     @Query(value =
         "SELECT p.Ciudad_id          AS ciudad_id, " +
         "       COUNT(s.id)          AS total_servicios " +
@@ -99,7 +87,7 @@ public interface ServicioRepository extends JpaRepository<Servicio, Integer> {
 
 
 
-    // ===== RFC1: histórico por usuario (join USERVICIOS -> SERVICIO) =====
+    //RFC1
     @Query(value = """
     SELECT s.* 
       FROM SERVICIO s
@@ -108,4 +96,18 @@ public interface ServicioRepository extends JpaRepository<Servicio, Integer> {
      ORDER BY s.HORA_INICIO
     """, nativeQuery = true)
     List<Servicio> listarHistoricoUsuario(@Param("usuarioId") int usuarioId);
+
+
+
+    @Modifying
+    @Transactional
+    @Query(value = """
+        UPDATE SERVICIO
+        SET HORA_FIN = :horaFin,
+            DISTANCIA_RECORRIDA = :distancia
+        WHERE ID = :id
+        """, nativeQuery = true)
+    void actualizarFinYDistancia(@Param("id") Integer id,
+                                @Param("horaFin") java.time.LocalDateTime horaFin,
+                                @Param("distancia") Integer distancia);
 }                                                

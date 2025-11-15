@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import uniandes.edu.co.proyecto.modelo.ServicioPuntosFin;
 import uniandes.edu.co.proyecto.modelo.ServicioPuntosFinPK;
 
-public interface ServicioPuntosFinRepostory extends JpaRepository<ServicioPuntosFin, ServicioPuntosFinPK> {
+public interface ServicioPuntosFinRepository extends JpaRepository<ServicioPuntosFin, ServicioPuntosFinPK> {
     
     @Query(value= "SELECT * FROM ServiciosPuntosFin", nativeQuery = true)
     Collection<ServicioPuntosFin> darServiciosPuntosFins();

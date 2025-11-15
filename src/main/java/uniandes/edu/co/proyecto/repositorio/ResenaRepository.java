@@ -13,11 +13,11 @@ import uniandes.edu.co.proyecto.modelo.ResenaPK;
 
 public interface ResenaRepository extends JpaRepository<Resena, ResenaPK> {
 
-    /* LISTAR */
+    
     @Query(value = "SELECT * FROM Resena", nativeQuery = true)
     Collection<Resena> darResenas();
 
-    /* OBTENER POR PK (User_idusuario, Ucond_idusuario) */
+   
     @Query(value = "SELECT * FROM Resena " +
                    "WHERE User_idusuario = :userIdUsuario " +
                    "  AND Ucond_idusuario = :ucondIdUsuario",
@@ -25,7 +25,7 @@ public interface ResenaRepository extends JpaRepository<Resena, ResenaPK> {
     Resena darResena(@Param("userIdUsuario") int userIdUsuario,
                      @Param("ucondIdUsuario") int ucondIdUsuario);
 
-    /* INSERTAR (todas las columnas requeridas por NOT NULL / FKs) */
+ 
     @Modifying
     @Transactional
     @Query(value = "INSERT INTO Resena " +
@@ -39,7 +39,6 @@ public interface ResenaRepository extends JpaRepository<Resena, ResenaPK> {
                         @Param("comentario") String comentario,
                         @Param("puntuacion") Integer puntuacion);
 
-    /* ACTUALIZAR SOLO CAMPOS EDITABLES (comentario, puntuacion) */
     @Modifying
     @Transactional
     @Query(value = "UPDATE Resena " +
@@ -53,7 +52,6 @@ public interface ResenaRepository extends JpaRepository<Resena, ResenaPK> {
                           @Param("comentario") String comentario,
                           @Param("puntuacion") Integer puntuacion);
 
-    /* ELIMINAR POR PK */
     @Modifying
     @Transactional
     @Query(value = "DELETE FROM Resena " +

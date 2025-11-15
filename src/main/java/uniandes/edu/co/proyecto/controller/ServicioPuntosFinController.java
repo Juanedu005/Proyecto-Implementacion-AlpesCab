@@ -8,14 +8,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.ui.Model;
 import uniandes.edu.co.proyecto.modelo.ServicioPuntosFin;
-import uniandes.edu.co.proyecto.repositorio.ServicioPuntosFinRepostory;
+import uniandes.edu.co.proyecto.repositorio.ServicioPuntosFinRepository;
 ;
 
 @Controller
 public class ServicioPuntosFinController {
     
     @Autowired
-    private ServicioPuntosFinRepostory servicioPuntosFinRepository;
+    private ServicioPuntosFinRepository servicioPuntosFinRepository;
 
     @GetMapping("/serviciopuntosfins")
     public String serviciopuntosfins(Model model){
