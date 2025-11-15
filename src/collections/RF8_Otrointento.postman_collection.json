@@ -1,0 +1,632 @@
+{
+    "info": {
+      "name": "ALPESCAB RF8 & RFC1",
+      "_postman_id": "e2b4b4a0-0000-0000-0000-000000000001",
+      "description": "Colección para preparar datos de prueba y probar RF8 y RFC1 con variables compartidas.",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+      {
+        "name": "01 - Crear Ciudad (ciudad_id)",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "name": "Content-Type",
+              "value": "application/json",
+              "type": "text"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"id\": {{ciudad_id}},\n  \"nombre\": \"Bogotá\"\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          },
+          "url": {
+            "raw": "{{baseUrl}}/api_pruebas/ciudad",
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "path": [
+              "api_pruebas",
+              "ciudad"
+            ]
+          }
+        },
+        "response": []
+      },
+      {
+        "name": "02 - Crear Usuario Servicio (usuario_servicio_id)",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "name": "Content-Type",
+              "value": "application/json",
+              "type": "text"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"id\": {{usuario_servicio_id}},\n  \"nombre\": \"Valentina\",\n  \"email\": \"vale@example.com\",\n  \"cedula\": \"111111111\"\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          },
+          "url": {
+            "raw": "{{baseUrl}}/api_pruebas/usuario",
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "path": [
+              "api_pruebas",
+              "usuario"
+            ]
+          }
+        },
+        "response": []
+      },
+      {
+        "name": "03 - Crear Tarjeta (USERVICIOS) para usuario_servicio_id",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "name": "Content-Type",
+              "value": "application/json",
+              "type": "text"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"nombreTC\": \"VISA\",\n  \"numeroTC\": 4111111111111111,\n  \"fechaVencimiento\": \"2030-12-31\",\n  \"cv\": 123,\n  \"usuarioId\": {{usuario_servicio_id}}\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          },
+          "url": {
+            "raw": "{{baseUrl}}/api_pruebas/uservicios",
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "path": [
+              "api_pruebas",
+              "uservicios"
+            ]
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "exec": [
+                "try {",
+                "  var data = pm.response.json();",
+                "  if (data.idUsuario) {",
+                "    pm.collectionVariables.set(\"usuario_servicio_id\", data.idUsuario);",
+                "    console.log(\"GUARDADO usuario_servicio_id =\", data.idUsuario);",
+                "  }",
+                "} catch (e) {",
+                "  console.log(\"No se pudo parsear respuesta de uservicios:\", e);",
+                "}"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ]
+      },
+      {
+        "name": "04 - Crear Usuario Conductor (usuario_conductor_id)",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "name": "Content-Type",
+              "value": "application/json",
+              "type": "text"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"id\": {{usuario_conductor_id}},\n  \"nombre\": \"Conductor Demo\",\n  \"email\": \"conductor@demo.com\",\n  \"cedula\": \"90000000\"\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          },
+          "url": {
+            "raw": "{{baseUrl}}/api_pruebas/usuario",
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "path": [
+              "api_pruebas",
+              "usuario"
+            ]
+          }
+        },
+        "response": []
+      },
+      {
+        "name": "05 - Crear UCONDUCTOR (id_conductor)",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "name": "Content-Type",
+              "value": "application/json",
+              "type": "text"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"usuarioId\": {{usuario_conductor_id}}\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          },
+          "url": {
+            "raw": "{{baseUrl}}/api_pruebas/uconductor",
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "path": [
+              "api_pruebas",
+              "uconductor"
+            ]
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "exec": [
+                "try {",
+                "  var data = pm.response.json();",
+                "  if (data.idConductor) {",
+                "    pm.collectionVariables.set(\"id_conductor\", data.idConductor);",
+                "    pm.collectionVariables.set(\"usuario_conductor_id\", data.idUsuario || pm.collectionVariables.get(\"usuario_conductor_id\"));",
+                "    console.log(\"GUARDADO id_conductor =\", data.idConductor);",
+                "  }",
+                "} catch (e) {",
+                "  console.log(\"No se pudo parsear respuesta de uconductor:\", e);",
+                "}"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ]
+      },
+      {
+        "name": "06 - Crear Vehículo (vehiculo_id)",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "name": "Content-Type",
+              "value": "application/json",
+              "type": "text"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"tipo\": \"CARRO\",\n  \"marca\": \"Kia\",\n  \"modelo\": \"Picanto\",\n  \"color\": \"Rojo\",\n  \"placa\": \"ABC123\",\n  \"capacidad\": 4,\n  \"ciudadId\": {{ciudad_id}},\n  \"idConductor\": {{id_conductor}},\n  \"idUsuario\": {{usuario_conductor_id}}\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          },
+          "url": {
+            "raw": "{{baseUrl}}/api_pruebas/vehiculo",
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "path": [
+              "api_pruebas",
+              "vehiculo"
+            ]
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "exec": [
+                "try {",
+                "  var data = pm.response.json();",
+                "  if (data.id) {",
+                "    pm.collectionVariables.set(\"vehiculo_id\", data.id);",
+                "    console.log(\"GUARDADO vehiculo_id =\", data.id);",
+                "  }",
+                "} catch (e) {",
+                "  console.log(\"No se pudo parsear respuesta de vehiculo:\", e);",
+                "}"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ]
+      },
+      {
+        "name": "07 - Crear Franja (franja_id)",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "name": "Content-Type",
+              "value": "application/json",
+              "type": "text"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"vehiculoId\": {{vehiculo_id}},\n  \"idConductor\": {{id_conductor}},\n  \"idUsuario\": {{usuario_conductor_id}},\n  \"horaInicio\": \"2025-11-15T00:00:00\",\n  \"horaFin\": \"2025-11-15T23:59:59\"\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          },
+          "url": {
+            "raw": "{{baseUrl}}/api_pruebas/franja",
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "path": [
+              "api_pruebas",
+              "franja"
+            ]
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "exec": [
+                "try {",
+                "  var data = pm.response.json();",
+                "  if (data.idFranja) {",
+                "    pm.collectionVariables.set(\"franja_id\", data.idFranja);",
+                "    console.log(\"GUARDADO franja_id =\", data.idFranja);",
+                "  }",
+                "} catch (e) {",
+                "  console.log(\"No se pudo parsear respuesta de franja:\", e);",
+                "}"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ]
+      },
+      {
+        "name": "08 - Crear Punto Origen (punto_origen_id)",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "name": "Content-Type",
+              "value": "application/json",
+              "type": "text"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"direccion\": \"Punto Origen Demo\",\n  \"latitud\": \"4.65\",\n  \"longitud\": \"-74.06\",\n  \"ciudadId\": {{ciudad_id}},\n  \"servicioId\": 1,\n  \"puntoId\": {{punto_origen_id}}\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          },
+          "url": {
+            "raw": "{{baseUrl}}/api_pruebas/punto",
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "path": [
+              "api_pruebas",
+              "punto"
+            ]
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "exec": [
+                "try {",
+                "  var data = pm.response.json();",
+                "  if (data.puntoId) {",
+                "    pm.collectionVariables.set(\"punto_origen_id\", data.puntoId);",
+                "    console.log(\"GUARDADO punto_origen_id =\", data.puntoId);",
+                "  }",
+                "} catch (e) {",
+                "  console.log(\"No se pudo parsear respuesta de punto origen:\", e);",
+                "}"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ]
+      },
+      {
+        "name": "09 - Crear Punto Destino (punto_destino_id)",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "name": "Content-Type",
+              "value": "application/json",
+              "type": "text"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"direccion\": \"Punto Destino Demo\",\n  \"latitud\": \"4.67\",\n  \"longitud\": \"-74.05\",\n  \"ciudadId\": {{ciudad_id}},\n  \"servicioId\": 1,\n  \"puntoId\": {{punto_destino_id}}\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          },
+          "url": {
+            "raw": "{{baseUrl}}/api_pruebas/punto",
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "path": [
+              "api_pruebas",
+              "punto"
+            ]
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "exec": [
+                "try {",
+                "  var data = pm.response.json();",
+                "  if (data.puntoId) {",
+                "    pm.collectionVariables.set(\"punto_destino_id\", data.puntoId);",
+                "    console.log(\"GUARDADO punto_destino_id =\", data.puntoId);",
+                "  }",
+                "} catch (e) {",
+                "  console.log(\"No se pudo parsear respuesta de punto destino:\", e);",
+                "}"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ]
+      },
+      {
+        "name": "10 - RF8 - Validar medio de pago",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "name": "Content-Type",
+              "value": "application/json",
+              "type": "text"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"usuarioId\": {{usuario_servicio_id}}\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          },
+          "url": {
+            "raw": "{{baseUrl}}/api/rf8/validar-medio-pago",
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "path": [
+              "api",
+              "rf8",
+              "validar-medio-pago"
+            ]
+          }
+        },
+        "response": []
+      },
+      {
+        "name": "11 - RF8 - Solicitar servicio",
+        "event": [
+          {
+            "listen": "prerequest",
+            "script": {
+              "exec": [
+                "function def(name, value) {",
+                "  if (!pm.collectionVariables.get(name)) {",
+                "    pm.collectionVariables.set(name, value);",
+                "    console.log(\"Inicializada variable:\", name, value);",
+                "  }",
+                "}",
+                "",
+                "def(\"usuario_servicio_id\", 12);",
+                "def(\"ciudad_id\", 1);",
+                "def(\"punto_origen_id\", 10);",
+                "def(\"punto_destino_id\", 11);",
+                "def(\"id_conductor\", 1);",
+                "def(\"vehiculo_id\", 1);",
+                "",
+                "console.log(\"Variables RF8:\", {",
+                "  usuario_servicio_id: pm.collectionVariables.get(\"usuario_servicio_id\"),",
+                "  ciudad_id: pm.collectionVariables.get(\"ciudad_id\"),",
+                "  punto_origen_id: pm.collectionVariables.get(\"punto_origen_id\"),",
+                "  punto_destino_id: pm.collectionVariables.get(\"punto_destino_id\")",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          },
+          {
+            "listen": "test",
+            "script": {
+              "exec": [
+                "try {",
+                "  var data = pm.response.json();",
+                "  console.log(\"Respuesta RF8:\", data);",
+                "} catch (e) {",
+                "  console.log(\"No se pudo parsear respuesta RF8:\", e);",
+                "}"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ],
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "name": "Content-Type",
+              "value": "application/json",
+              "type": "text"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"idUsuarioServicio\": {{usuario_servicio_id}},\n  \"tipoServicio\": \"PASAJEROS\",\n  \"nivelPasajero\": \"CONFORT\",\n  \"idCiudad\": {{ciudad_id}},\n  \"idPuntoOrigen\": {{punto_origen_id}},\n  \"idPuntoDestino\": {{punto_destino_id}},\n  \"distanciaKm\": 8,\n  \"forzarError\": false\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          },
+          "url": {
+            "raw": "{{baseUrl}}/api/rf8/solicitar",
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "path": [
+              "api",
+              "rf8",
+              "solicitar"
+            ]
+          }
+        },
+        "response": []
+      },
+      {
+        "name": "12 - RFC1 - Serializable",
+        "request": {
+          "method": "GET",
+          "header": [],
+          "url": {
+            "raw": "{{baseUrl}}/rfc1/serializable?usuarioId={{usuario_servicio_id}}",
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "path": [
+              "rfc1",
+              "serializable"
+            ],
+            "query": [
+              {
+                "key": "usuarioId",
+                "value": "{{usuario_servicio_id}}"
+              }
+            ]
+          }
+        },
+        "response": []
+      },
+      {
+        "name": "13 - RFC1 - Read Committed",
+        "request": {
+          "method": "GET",
+          "header": [],
+          "url": {
+            "raw": "{{baseUrl}}/rfc1/read-committed?usuarioId={{usuario_servicio_id}}",
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "path": [
+              "rfc1",
+              "read-committed"
+            ],
+            "query": [
+              {
+                "key": "usuarioId",
+                "value": "{{usuario_servicio_id}}"
+              }
+            ]
+          }
+        },
+        "response": []
+      }
+    ],
+    "variable": [
+      {
+        "key": "baseUrl",
+        "value": "http://localhost:8080"
+      },
+      {
+        "key": "usuario_servicio_id",
+        "value": "12"
+      },
+      {
+        "key": "usuario_conductor_id",
+        "value": "15"
+      },
+      {
+        "key": "id_conductor",
+        "value": ""
+      },
+      {
+        "key": "vehiculo_id",
+        "value": ""
+      },
+      {
+        "key": "franja_id",
+        "value": ""
+      },
+      {
+        "key": "punto_origen_id",
+        "value": "10"
+      },
+      {
+        "key": "punto_destino_id",
+        "value": "11"
+      },
+      {
+        "key": "ciudad_id",
+        "value": "1"
+      }
+    ]
+  }
+  

@@ -1,4 +1,4 @@
-
+/* */
 package uniandes.edu.co.proyecto.servicio;
 
 import java.time.LocalDateTime;
@@ -72,7 +72,7 @@ public class SolicitudService {
         pk.setId_servicios(s.getId());
         u.setPk(pk);
         u.setUsuario(usuario);
-        u.setServicio(s);
+        //u.setServicio(s);
         userviciosRepo.save(u);
 
         if (forzarError) {

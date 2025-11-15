@@ -2,6 +2,7 @@ package uniandes.edu.co.proyecto.modelo;
 
 import java.sql.Date;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -28,10 +29,8 @@ public class Uservicios {
     private Usuario usuario;
 
 
-    @MapsId("id_servicios")
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "ID_SERVICIOS", referencedColumnName = "ID")
-    private Servicio servicio;
+    //@Column(name = "ID_SERVICIOS")
+    //private Integer idServicios;
 
     public Uservicios() { }
 
@@ -91,11 +90,11 @@ public class Uservicios {
         this.usuario = usuario;
     }
 
-    public Servicio getServicio() {
-        return servicio;
-    }
+    //public Integer getServicio() {
+    //    return idServicios;
+    //}
 
-    public void setServicio(Servicio servicio) {
-        this.servicio = servicio;
-    }
+    //public void setServicio(Integer servicio) {
+    //    this.idServicios = servicio;
+    //}
 }

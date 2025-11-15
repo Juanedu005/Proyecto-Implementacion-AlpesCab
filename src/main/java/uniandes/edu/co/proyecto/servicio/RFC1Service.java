@@ -1,12 +1,14 @@
-
 package uniandes.edu.co.proyecto.servicio;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import uniandes.edu.co.proyecto.dto.RFC1Request;
 import uniandes.edu.co.proyecto.modelo.Servicio;
 import uniandes.edu.co.proyecto.repositorio.ServicioRepository;
 
@@ -19,25 +21,67 @@ public class RFC1Service {
         this.servicioRepo = servicioRepo;
     }
 
-    @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
-    public RFC1Resultado consultarSerializable(int usuarioId) throws InterruptedException {
-        List<Servicio> antes = servicioRepo.listarHistoricoUsuario(usuarioId);
-        Thread.sleep(30_000);
-        List<Servicio> despues = servicioRepo.listarHistoricoUsuario(usuarioId);
-        return new RFC1Resultado("SERIALIZABLE", antes, despues);
-    }
-
+    /**
+     * RFC1 en nivel READ COMMITTED
+     */
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
-    public RFC1Resultado consultarReadCommitted(int usuarioId) throws InterruptedException {
-        List<Servicio> antes = servicioRepo.listarHistoricoUsuario(usuarioId);
-        Thread.sleep(30_000);
-        List<Servicio> despues = servicioRepo.listarHistoricoUsuario(usuarioId);
-        return new RFC1Resultado("READ_COMMITTED", antes, despues);
+    public Map<String, Object> ejecutarReadCommitted(RFC1Request req) {
+
+        // 1. Consulta ANTES del temporizador
+        List<Servicio> antes = servicioRepo.rfc1HistoricoPorUsuario(
+                req.getIdUsuario(),
+                req.getIdServicio()
+        );
+
+        // 2. Temporizador de 30 segundos
+        try {
+            Thread.sleep(30_000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        // 3. Consulta DESPUÉS del temporizador
+        List<Servicio> despues = servicioRepo.rfc1HistoricoPorUsuario(
+                req.getIdUsuario(),
+                req.getIdServicio()
+        );
+
+        // 4. Armamos la respuesta para que puedas comparar en el informe
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("nivelAislamiento", "READ_COMMITTED");
+        resp.put("antes", antes);
+        resp.put("despues", despues);
+
+        return resp;
     }
 
-    public static record RFC1Resultado(
-        String aislamiento,
-        List<Servicio> antes,
-        List<Servicio> despues
-    ) {}
+    /**
+     * RFC1 en nivel SERIALIZABLE
+     */
+    @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
+    public Map<String, Object> ejecutarSerializable(RFC1Request req) {
+
+        List<Servicio> antes = servicioRepo.rfc1HistoricoPorUsuario(
+                req.getIdUsuario(),
+                req.getIdServicio()
+        );
+
+        try {
+            Thread.sleep(30_000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        List<Servicio> despues = servicioRepo.rfc1HistoricoPorUsuario(
+                req.getIdUsuario(),
+                req.getIdServicio()
+        );
+
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("nivelAislamiento", "SERIALIZABLE");
+        resp.put("antes", antes);
+        resp.put("despues", despues);
+
+        return resp;
+    }
 }

@@ -23,25 +23,24 @@ public class PuntoService {
     private ServicioRepository servicioRepository;
 
     @Transactional
-    public Punto registrarPunto(String direccion, String latitud, String longitud,
-                                Integer ciudadId, Integer servicioId) {
+    public Punto registrarPunto(String direccion, String latitud, String longitud, Integer ciudadId, Integer servicioId) {
 
-        Ciudad ciudad = ciudadRepository.findById(ciudadId)
-                .orElseThrow(() -> new RuntimeException("Ciudad no encontrada"));
-
+        Ciudad ciudad = ciudadRepository.getReferenceById(ciudadId);
+    
+        // Servicio puede ser opcional
         Servicio servicio = null;
         if (servicioId != null) {
             servicio = servicioRepository.findById(servicioId)
-                    .orElseThrow(() -> new RuntimeException("Servicio no encontrado"));
+                .orElseThrow(() -> new RuntimeException("Servicio no encontrado: " + servicioId));
         }
-
-        Punto nuevoPunto = new Punto();
-        nuevoPunto.setDireccion(direccion);
-        nuevoPunto.setLatitud(latitud);
-        nuevoPunto.setLongitud(longitud);
-        nuevoPunto.setCiudad_id(ciudad);
-        nuevoPunto.setServicio_id(servicio);
-
-        return puntoRepository.save(nuevoPunto);
+    
+        Punto punto = new Punto();
+        punto.setDireccion(direccion);
+        punto.setLatitud(latitud);
+        punto.setLongitud(longitud);
+        punto.setCiudad_id(ciudad);
+        punto.setServicio_id(servicio);
+    
+        return puntoRepository.save(punto);
     }
 }

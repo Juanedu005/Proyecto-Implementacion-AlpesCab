@@ -2,6 +2,7 @@ package uniandes.edu.co.proyecto.repositorio;
 
 import java.sql.Date;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -66,14 +67,13 @@ public interface UserviciosRepository extends JpaRepository<Uservicios, Uservici
     void eliminarUservicio(@Param("id_usuario") Integer idUsuario,
                            @Param("id_servicios") Integer idServicios);
 
-    @Query(value = """
-    SELECT u.*
+    @Query("""
+    SELECT u
     FROM Uservicios u
-    WHERE u.id_usuario = :idUsuario
-    AND u.fecha_vencimiento >= TRUNC(SYSDATE)
-    """, nativeQuery = true)
-    Optional<Uservicios> encontrarMedioPagoVigente(Integer idUsuario);
-                    
-
+    WHERE u.usuario.id = :idUsuario
+    AND u.fecha_vencimiento >= CURRENT_DATE
+    ORDER BY u.fecha_vencimiento ASC
+    """)
+    List<Uservicios> encontrarMediosPagoVigentes(@Param("idUsuario") Integer idUsuario);
     
 }

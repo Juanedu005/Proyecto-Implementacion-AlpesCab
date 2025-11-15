@@ -1,0 +1,735 @@
+{
+	"info": {
+		"_postman_id": "dc272e99-a5db-41b0-8115-f3259a8aa439",
+		"name": "RF8 & RFC1 - Incisos 2,3,4,5",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "47436459",
+		"_collection_link": "https://v-ruedac-1679516.postman.co/workspace/533f2de5-cd84-4566-8350-76b01a6e3dc4/collection/47436459-dc272e99-a5db-41b0-8115-f3259a8aa439?action=share&source=collection_link&creator=47436459"
+	},
+	"item": [
+		{
+			"name": "Paso 1 (RF1)- Crear Ciudad (ciudad_id)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": {{ciudad_id}},\n  \"nombre\": \"Bogotá\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/ciudades",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"ciudades"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Paso 2 (RF2) - Crear Usuario Servicio (usuario_servicio_id)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": {{usuario_servicio_id}},\n  \"nombre\": \"Valentina\",\n  \"email\": \"vale@example.com\",\n  \"cedula\": \"111111111\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/usuarios",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"usuarios"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Paso 3 - Crear Tarjeta usuario_servicio_id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"try {",
+							"  var data = pm.response.json();",
+							"  if (data.idUsuario) {",
+							"    pm.collectionVariables.set(\"usuario_servicio_id\", data.idUsuario);",
+							"    console.log(\"GUARDADO usuario_servicio_id =\", data.idUsuario);",
+							"  }",
+							"} catch (e) {",
+							"  console.log(\"No se pudo parsear respuesta de uservicios:\", e);",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nombreTC\": \"VISA\",\n  \"numeroTC\": 4111111111111111,\n  \"fechaVencimiento\": \"2030-12-31\",\n  \"cv\": 123,\n  \"usuarioId\": {{usuario_servicio_id}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/uservicios",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"uservicios"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Paso 4 (RF3) - Crear Usuario Conductor (usuario_conductor_id)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"try {",
+							"  var data = pm.response.json();",
+							"  if (data.id) {",
+							"    pm.collectionVariables.set(\"usuario_conductor_id\", data.id);",
+							"    console.log(\"GUARDADO usuario_conductor_id =\", data.id);",
+							"  } else {",
+							"    console.warn(\"Respuesta de Crear Usuario Conductor sin 'id':\", data);",
+							"  }",
+							"} catch (e) {",
+							"  console.log(\"No se pudo parsear respuesta de Crear Usuario Conductor:\", e);",
+							"}",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nombre\": \"Conductor {{$randomFirstName}} {{$randomLastName}}\",\n  \"email\": \"conductor{{$timestamp}}@demo.com\",\n  \"cedula\": \"{{$randomInt}}\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/usuarios",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"usuarios"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Paso 5 - Crear conductor, id_conductor)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const data = pm.response.json();",
+							"",
+							"pm.collectionVariables.set(\"id_conductor\", data.idConductor);",
+							"pm.collectionVariables.set(\"usuario_conductor_id\", data.idUsuario);",
+							"",
+							"console.log(\"GUARDADO id_conductor =\", data.idConductor);",
+							"console.log(\"GUARDADO usuario_conductor_id =\", data.idUsuario);",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"usuarioId\": {{usuario_conductor_id}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/uconductor",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"uconductor"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Paso 6 (RF4)- Crear Vehículo (vehiculo_id)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"try {",
+							"  var data = pm.response.json();",
+							"  if (data.id) {",
+							"    pm.collectionVariables.set(\"vehiculo_id\", data.id);",
+							"    console.log(\"GUARDADO vehiculo_id =\", data.id);",
+							"  }",
+							"} catch (e) {",
+							"  console.log(\"No se pudo parsear respuesta de vehiculo:\", e);",
+							"}",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"tipo\": \"CARRO\",\n  \"marca\": \"Kia\",\n  \"modelo\": \"Picanto\",\n  \"color\": \"Rojo\",\n  \"placa\": \"FLE{{$randomInt}}\",\n  \"capacidad\": 4,\n  \"ciudadId\": {{ciudad_id}},\n  \"ucondIdcond\": {{id_conductor}},\n  \"ucondIdusuario\": {{usuario_conductor_id}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/vehiculos",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"vehiculos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Paso 7 (RF5)- Crear Franja (franja_id)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"try {",
+							"  var data = pm.response.json();",
+							"  if (data.idFranja) {",
+							"    pm.collectionVariables.set(\"franja_id\", data.idFranja);",
+							"    console.log(\"GUARDADO franja_id =\", data.idFranja);",
+							"  }",
+							"} catch (e) {",
+							"  console.log(\"No se pudo parsear respuesta de franja:\", e);",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"vehiculoId\": {{vehiculo_id}},\n  \"idConductor\": {{id_conductor}},\n  \"idUsuario\": {{usuario_conductor_id}},\n  \"horaInicio\": \"2025-11-15T00:00:00\",\n  \"horaFin\":   \"2025-11-16T23:59:59\",\n  \"ocupado\": 0\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/franjas",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"franjas"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Paso 8 - Crear Punto Origen (punto_origen_id)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"try {",
+							"  var data = pm.response.json();",
+							"  if (data.puntoId) {",
+							"    pm.collectionVariables.set(\"punto_origen_id\", data.puntoId);",
+							"    console.log(\"GUARDADO punto_origen_id =\", data.puntoId);",
+							"  }",
+							"} catch (e) {",
+							"  console.log(\"No se pudo parsear respuesta de punto origen:\", e);",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"direccion\": \"Punto Origen Demo\",\n  \"latitud\": \"4.65\",\n  \"longitud\": \"-74.06\",\n  \"ciudadId\": {{ciudad_id}},\n  \"servicioId\": null,\n  \"puntoId\": {{punto_origen_id}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/puntos/registrar",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"puntos",
+						"registrar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Paso 9 (RF7) - Crear Punto Destino",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"try {",
+							"  var data = pm.response.json();",
+							"  if (data.puntoId) {",
+							"    pm.collectionVariables.set(\"punto_destino_id\", data.puntoId);",
+							"    console.log(\"GUARDADO punto_destino_id =\", data.puntoId);",
+							"  }",
+							"} catch (e) {",
+							"  console.log(\"No se pudo parsear respuesta de punto destino:\", e);",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"direccion\": \"Punto Destino Demo\",\n  \"latitud\": \"4.67\",\n  \"longitud\": \"-74.05\",\n  \"ciudadId\": {{ciudad_id}},\n  \"servicioId\": null,\n  \"puntoId\": {{punto_destino_id}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/puntos/registrar",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"puntos",
+						"registrar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Paso 10 - RF8 - Validar medio de pago",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"usuarioId\": {{usuario_servicio_id}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/rf8/validar-medio-pago",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"rf8",
+						"validar-medio-pago"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Paso 11 - RF8 - Solicitar servicio",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Parsear la respuesta",
+							"let resp = pm.response.json();",
+							"",
+							"// Guardar el id del servicio creado",
+							"if (resp && resp.id) {",
+							"    pm.environment.set(\"servicio_id_rf8\", resp.id);",
+							"    console.log(\"servicio_id_rf8 =\", resp.id);",
+							"} else {",
+							"    console.warn(\"No se encontró 'id' en la respuesta de RF8:\", resp);",
+							"}",
+							"",
+							"// Pequeña aserción básica",
+							"pm.test(\"RF8 respondió 2xx\", function () {",
+							"    pm.response.to.be.success;",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"idUsuarioServicio\": {{usuario_servicio_id}},\n  \"tipoServicio\": \"PASAJEROS\",\n  \"nivelPasajero\": \"CONFORT\",\n  \"idCiudad\": {{ciudad_id}},\n  \"idPuntoOrigen\": {{punto_origen_id}},\n  \"idPuntoDestino\": {{punto_destino_id}},\n  \"distanciaKm\": 8,\n  \"forzarError\": false\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/rf8/rf8/solicitar",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"rf8",
+						"rf8",
+						"solicitar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Paso 12 - RFC1 - Read Commited",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let resp = pm.response.json();",
+							"",
+							"pm.environment.set(\"rfc1_nivel\", \"READ_COMMITTED\");",
+							"",
+							"if (resp) {",
+							"    console.log(\"Nivel:\", resp.nivelAislamiento);",
+							"    console.log(\"Antes size:\", (resp.antes || []).length);",
+							"    console.log(\"Despues size:\", (resp.despues || []).length);",
+							"}",
+							"",
+							"pm.test(\"RFC1 READ_COMMITTED respondió 2xx\", function () {",
+							"    pm.response.to.be.success;",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"idUsuario\": {{usuario_servicio_id}},\n  \"idServicio\": {{servicio_id_rf8}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api_pruebas/rfc1/read-committed",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api_pruebas",
+						"rfc1",
+						"read-committed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Paso 13 - RFC1 - Serializable",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let resp = pm.response.json();",
+							"",
+							"pm.environment.set(\"rfc1_nivel\", \"SERIALIZABLE\");",
+							"",
+							"if (resp) {",
+							"    console.log(\"Nivel:\", resp.nivelAislamiento);",
+							"    console.log(\"Antes size:\", (resp.antes || []).length);",
+							"    console.log(\"Despues size:\", (resp.despues || []).length);",
+							"}",
+							"",
+							"pm.test(\"RFC1 SERIALIZABLE respondió 2xx\", function () {",
+							"    pm.response.to.be.success;",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"idUsuario\": {{usuario_servicio_id}},\n  \"idServicio\": {{servicio_id_rf8}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api_pruebas/rfc1/serializable",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api_pruebas",
+						"rfc1",
+						"serializable"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080"
+		},
+		{
+			"key": "usuario_servicio_id",
+			"value": "12"
+		},
+		{
+			"key": "usuario_conductor_id",
+			"value": "15"
+		},
+		{
+			"key": "id_conductor",
+			"value": ""
+		},
+		{
+			"key": "vehiculo_id",
+			"value": ""
+		},
+		{
+			"key": "franja_id",
+			"value": ""
+		},
+		{
+			"key": "punto_origen_id",
+			"value": "10"
+		},
+		{
+			"key": "punto_destino_id",
+			"value": "11"
+		},
+		{
+			"key": "ciudad_id",
+			"value": "1"
+		}
+	]
+}

@@ -35,6 +35,11 @@ public interface UconductorRepository extends JpaRepository<Uconductor, Uconduct
     @Query(value = "DELETE FROM Uconductor WHERE id_conductor = :id_conductor AND id_usuario = :id_usuario", nativeQuery = true)
     void eliminarUconductor(@Param("id_conductor") int id_conductor, @Param("id_usuario") int id_usuario);
 
+    @Modifying
+    @Transactional
+    @Query(value = "INSERT INTO Uconductor (id_usuario) VALUES (:idUsuario)", nativeQuery = true)
+    void insertarUconductor(@Param("idUsuario") Integer idUsuario);
+
     //RFC2
     @Query(value =
         "WITH svc_asig AS ( " +

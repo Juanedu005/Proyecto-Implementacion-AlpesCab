@@ -3,12 +3,15 @@ package uniandes.edu.co.proyecto.servicio;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+//import org.hibernate.mapping.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import uniandes.edu.co.proyecto.dto.ServicioRF8Response;
 import uniandes.edu.co.proyecto.dto.SolicitudServicioRF8Request;
 import uniandes.edu.co.proyecto.modelo.*;
 import uniandes.edu.co.proyecto.repositorio.*;
+import java.util.List;
 
 @Service
 public class SolicitudServicioRF8Service {
@@ -35,67 +38,79 @@ public class SolicitudServicioRF8Service {
     }
 
     @Transactional
-    public Servicio solicitarServicio(SolicitudServicioRF8Request req) {
-
+    public ServicioRF8Response solicitarServicio(SolicitudServicioRF8Request req) {
+    
         LocalDateTime ahora = LocalDateTime.now();
-
+    
         // 1. Validar medio de pago
-        Uservicios medioPago = userviciosRepo.encontrarMedioPagoVigente(req.getIdUsuarioServicio())
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "El usuario no tiene un medio de pago vigente"));
+        List<Uservicios> medios = userviciosRepo
+        .encontrarMediosPagoVigentes(req.getIdUsuarioServicio());
 
-        // OJO: tu campo es java.sql.Date
+        if (medios.isEmpty()) {
+            throw new IllegalArgumentException("El usuario no tiene un medio de pago vigente");
+        }
+
+        // Por ejemplo, tomamos el primero (el que vence más pronto)
+        Uservicios medioPago = medios.get(0);
+
+    
         if (medioPago.getFecha_vencimiento().toLocalDate().isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("La tarjeta está vencida");
         }
-
+    
         // 2. Buscar franja disponible
         Franja franja = franjaRepo
                 .encontrarFranjaDisponible(req.getIdCiudad(), ahora)
                 .orElseThrow(() -> new IllegalStateException(
                         "No hay conductores disponibles en la ciudad " + req.getIdCiudad()));
-
+    
         // 3. Marcar franja como ocupada
         franja.setOcupado(1);
         franjaRepo.save(franja);
-
+    
         // 4. Crear Servicio
         Servicio servicio = new Servicio();
-
-        servicio.setTarifa_fija(calcularTarifa(req.getTipoServicio(),
-                req.getNivelPasajero(), req.getDistanciaKm()));
-
-        servicio.setDistancia_recorrida(req.getDistanciaKm());
-
+    
+        servicio.setTarifa_fija(
+                calcularTarifa(req.getTipoServicio(), req.getNivelPasajero(), req.getDistanciaKm())
+        );
+    
+        // si en la entidad es String, mejor así:
+        servicio.setDistancia_recorrida(req.getDistanciaKm()); // o req.getDistanciaKm() + " km"
+    
         servicio.setHora_incio(ahora);
-        servicio.setHora_fin(ahora); // luego RF9 la actualiza
-
-        // 4.1 Cargar punto origen (tu Servicio usa @OneToOne con Punto)
+        servicio.setHora_fin(ahora); // RF9 la actualizará
+    
         Punto puntoOrigen = puntoRepo.findById(req.getIdPuntoOrigen())
                 .orElseThrow(() -> new IllegalArgumentException("Punto origen no existe"));
         servicio.setP_Punto_id(puntoOrigen);
-
+    
         servicio = servicioRepo.save(servicio);
-
+    
         // 5. Registrar ServicioPuntosFin (destino)
         Punto puntoDestino = puntoRepo.findById(req.getIdPuntoDestino())
                 .orElseThrow(() -> new IllegalArgumentException("Punto destino no existe"));
-
-        // Crear la PK usando las ENTIDADES, no los Integer
+    
         ServicioPuntosFinPK spfPk = new ServicioPuntosFinPK(servicio, puntoDestino);
-
-        // Crear la entidad con esa PK
         ServicioPuntosFin spf = new ServicioPuntosFin(spfPk);
-
-        // Guardar
         servicioPuntosFinRepo.save(spf);
-        
+    
         // 6. Error forzado para rollback
         if (req.isForzarError()) {
             throw new RuntimeException("Rollback forzado en RF8");
         }
-
-        return servicio;
+    
+        // 7. Construir DTO de respuesta (sin tocar proxies raros)
+        return new ServicioRF8Response(
+                servicio.getId(),
+                servicio.getTarifa_fija(),
+                req.getDistanciaKm(),
+                servicio.getHora_incio(),
+                servicio.getHora_fin(),
+                puntoOrigen.getPunto_id(),
+                puntoDestino.getPunto_id(),
+                puntoOrigen.getCiudad_id().getId()
+        );
     }
 
     private int calcularTarifa(String tipoServicio, String nivel, Integer distanciaKm) {

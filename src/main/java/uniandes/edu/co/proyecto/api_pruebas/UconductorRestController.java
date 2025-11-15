@@ -1,37 +1,43 @@
 package uniandes.edu.co.proyecto.api_pruebas;
 
-
-import java.net.URI;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import uniandes.edu.co.proyecto.modelo.Usuario;
 import uniandes.edu.co.proyecto.repositorio.UconductorRepository;
+import uniandes.edu.co.proyecto.repositorio.UsuarioRepository;
 
 @RestController
-@RequestMapping("/api/conductores")
+@RequestMapping("/api/uconductor")
 public class UconductorRestController {
 
     @Autowired
-    private UconductorRepository repo;
+    private UconductorRepository uconductorRepository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     @PostMapping
-    public ResponseEntity<?> crear(@RequestBody Map<String, Object> body) {
-        try {
-            Integer idUsuario = (body.get("idUsuario") instanceof Number)
-                    ? ((Number) body.get("idUsuario")).intValue()
-                    : null;
+public ResponseEntity<?> crearUconductor(@RequestBody UconductorRequest request) {
 
-            repo.insertarUconductor(null, idUsuario);
-
-            return ResponseEntity
-                    .created(URI.create("/api/conductores"))
-                    .body(Map.of("mensaje", "Conductor registrado", "idUsuario", idUsuario));
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError()
-                    .body(Map.of("error", e.getClass().getSimpleName() + ": " + e.getMessage()));
-        }
+    // Validar que el usuario exista
+    Usuario usuario = usuarioRepository.darUsuario(request.usuarioId());
+    if (usuario == null) {
+        return ResponseEntity
+                .status(404)
+                .body("El usuario con id " + request.usuarioId() + " no existe.");
     }
+
+    // Insertar en Uconductor (id_usuario)
+    uconductorRepository.insertarUconductor(request.usuarioId());
+
+    return ResponseEntity
+            .status(201)
+            .body("Uconductor creado para usuario " + request.usuarioId());
+}
+
+
+    // DTO (JSON → Java)
+    public static record UconductorRequest(Integer usuarioId) {}
 }

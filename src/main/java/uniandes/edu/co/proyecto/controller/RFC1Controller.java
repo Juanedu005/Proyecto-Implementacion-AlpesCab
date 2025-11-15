@@ -1,29 +1,28 @@
-
 package uniandes.edu.co.proyecto.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import uniandes.edu.co.proyecto.dto.RFC1Request;
 import uniandes.edu.co.proyecto.servicio.RFC1Service;
-import uniandes.edu.co.proyecto.servicio.RFC1Service.RFC1Resultado;
 
 @RestController
+@RequestMapping("/api_pruebas/rfc1")
 public class RFC1Controller {
 
-    private final RFC1Service service;
+    private final RFC1Service rfc1Service;
 
-    public RFC1Controller(RFC1Service service) {
-        this.service = service;
+    public RFC1Controller(RFC1Service rfc1Service) {
+        this.rfc1Service = rfc1Service;
     }
 
-    @GetMapping("/rfc1/serializable")
-    public RFC1Resultado serializable(@RequestParam int usuarioId) throws Exception {
-        return service.consultarSerializable(usuarioId);
+    @PostMapping("/read-committed")
+    public ResponseEntity<?> ejecutarReadCommitted(@RequestBody RFC1Request req) {
+        return ResponseEntity.ok(rfc1Service.ejecutarReadCommitted(req));
     }
 
-    @GetMapping("/rfc1/read-committed")
-    public RFC1Resultado readCommitted(@RequestParam int usuarioId) throws Exception {
-        return service.consultarReadCommitted(usuarioId);
+    @PostMapping("/serializable")
+    public ResponseEntity<?> ejecutarSerializable(@RequestBody RFC1Request req) {
+        return ResponseEntity.ok(rfc1Service.ejecutarSerializable(req));
     }
 }
